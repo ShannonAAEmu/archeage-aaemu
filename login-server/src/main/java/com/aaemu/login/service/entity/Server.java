@@ -1,11 +1,11 @@
-package com.aaemu.login.service.dto;
+package com.aaemu.login.service.entity;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ServerDto {
+public class Server {
     private byte id;
     private String name;
     private boolean isAvailable;

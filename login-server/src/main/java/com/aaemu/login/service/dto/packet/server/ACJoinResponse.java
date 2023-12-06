@@ -1,7 +1,7 @@
-package com.aaemu.login.service.entity.packet.server;
+package com.aaemu.login.service.dto.packet.server;
 
-import com.aaemu.login.service.entity.packet.Packet;
-import com.aaemu.login.service.entity.packet.ServerPacket;
+import com.aaemu.login.service.dto.packet.Packet;
+import com.aaemu.login.service.dto.packet.ServerPacket;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -14,6 +14,8 @@ public class ACJoinResponse extends Packet {
     private int reason;
 
     /**
+     * Account future set
+     * <p>
      * afs[0] -> max number of characters per account
      * afs[1] -> additional number of characters per server when using the slot increase item
      * afs[2] -> 1 - character pre-creation mode 1-режим предварительного создания персонажей

@@ -1,7 +1,9 @@
-app:
+login:
   port: 1237
   threads: 10
 auth:
-  otp: true
+  otp: false
   otp_max_try: 3
-  ars: false # not release by XLGames
+  ars: false          # Not release by XLGames in leaked client
+  pc_cert: false      # Not release by XLGames in leaked client
+  pc_cert_max_try: 3

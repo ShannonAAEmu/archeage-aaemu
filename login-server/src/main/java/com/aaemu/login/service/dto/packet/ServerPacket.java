@@ -1,4 +1,4 @@
-package com.aaemu.login.service.entity.packet;
+package com.aaemu.login.service.dto.packet;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,13 @@ public enum ServerPacket {
     ACChallenge2("4"),
     ACEnterOtp("5"),
     ACShowArs("6"),
+    ACEnterPcCert("7"),
     ACWorldList("8"),
-    ACLoginDenied("C");
+    ACWorldQueue("9"),
+    ACWorldCookie("A"),
+    ACEnterWorldDenied("B"),
+    ACLoginDenied("C"),
+    ACAccountWarned("D");
 
     private final String opcode;
 
