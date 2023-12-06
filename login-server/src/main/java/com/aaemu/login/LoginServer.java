@@ -41,6 +41,12 @@ public class LoginServer {
     @Value("${login.port}")
     private int port;
 
+    @Value("${logger.active}")
+    private boolean isActiveLog;
+
+    @Value("${logger.level}")
+    private String logLevel;
+
     @PostConstruct
     public void start() throws InterruptedException {
         try {
@@ -57,7 +63,9 @@ public class LoginServer {
                         @Override
                         public void initChannel(@NonNull SocketChannel channel) {
                             channel.pipeline().addLast("exception", new ExceptionHandler(accountMap));
-                            channel.pipeline().addLast("logger", new LoggingHandler(LogLevel.INFO));
+                            if (isActiveLog) {
+                                channel.pipeline().addLast("logger", new LoggingHandler(LogLevel.valueOf(logLevel)));
+                            }
                             channel.pipeline().addLast("codec", new PacketCodec(byteBufUtil));
                             channel.pipeline().addLast(eventExecutor, processingHandler);
                         }

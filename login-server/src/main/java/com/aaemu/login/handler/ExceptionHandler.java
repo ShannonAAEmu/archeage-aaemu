@@ -21,9 +21,9 @@ public class ExceptionHandler extends ChannelDuplexHandler {
         if (cause instanceof SocketException socketException) {
             if (socketException.getMessage().equals("Connection reset")) {
                 if (accountMap.get(ctx.channel()).chars().allMatch(Character::isDigit)) {
-                    log.info("Disconnect account id: {}", accountMap.get(ctx.channel()));
+                    log.warn("Disconnect account id: {}", accountMap.get(ctx.channel()));
                 } else {
-                    log.info("Disconnect account: {}", accountMap.get(ctx.channel()));
+                    log.warn("Disconnect account: {}", accountMap.get(ctx.channel()));
                 }
                 accountMap.remove(ctx.channel());
             } else {
