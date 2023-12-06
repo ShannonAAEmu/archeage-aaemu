@@ -1,2 +1,3 @@
 rootProject.name = 'archeage-aaemu'
 include 'login-server'
+include 'game-server'

@@ -1,9 +1,9 @@
-package com.aaemu.login.service.entity;
+package com.aaemu.login.service.dto.client;
 
 import lombok.Data;
 
 @Data
-public class Character {
+public class CharacterDto {
     private int accountId;
     private byte worldId;
     private int charId;

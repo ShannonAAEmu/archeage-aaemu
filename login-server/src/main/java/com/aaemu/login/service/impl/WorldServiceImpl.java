@@ -1,9 +1,12 @@
 package com.aaemu.login.service.impl;
 
+import com.aaemu.login.client.GameServer;
 import com.aaemu.login.service.AuthService;
 import com.aaemu.login.service.LoginService;
 import com.aaemu.login.service.WorldService;
-import com.aaemu.login.service.annotation.TestData;
+import com.aaemu.login.service.dto.client.AddressDto;
+import com.aaemu.login.service.dto.client.LoginAccountDto;
+import com.aaemu.login.service.dto.client.QueueStatusDto;
 import com.aaemu.login.service.dto.packet.client.CACancelEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAListWorld;
@@ -12,15 +15,11 @@ import com.aaemu.login.service.dto.packet.server.ACEnterWorldDenied;
 import com.aaemu.login.service.dto.packet.server.ACWorldCookie;
 import com.aaemu.login.service.dto.packet.server.ACWorldList;
 import com.aaemu.login.service.dto.packet.server.ACWorldQueue;
-import com.aaemu.login.service.entity.Character;
-import com.aaemu.login.service.entity.Server;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -30,6 +29,8 @@ public class WorldServiceImpl implements WorldService {
     private final ByteBufUtil byteBufUtil;
     private final LoginService loginService;
     private final AuthService authService;
+    private final GameServer gameServer;
+    private final Map<Channel, String> accountMap;
     private final Map<Channel, Integer> cookieMap;
 
     private boolean isValidListWorldFlag(CAListWorld listWorld) {
@@ -40,20 +41,14 @@ public class WorldServiceImpl implements WorldService {
         return enterWorld.getFlag() == 0;   // TODO check
     }
 
-    private boolean isHasQueue(int worldId) {
-        return false;    // TODO check
-    }
-
     private void sendWorldList(Channel channel) {
         ACWorldList acWorldList = new ACWorldList();
-        List<Server> serverList = new ArrayList<>();
-        serverList.add(getTempServer());
-        acWorldList.setServerList(serverList);
-        acWorldList.setCount(acWorldList.getServerList().size());
-        List<Character> characterList = new ArrayList<>();
-//            characterDtoList.add(getTempCharacter());
-        acWorldList.setCharacterList(characterList);
-        acWorldList.setChCount(acWorldList.getCharacterList().size());
+        acWorldList.setServerDtoList(gameServer.getServerList());
+        acWorldList.setCount(acWorldList.getServerDtoList().size());
+        LoginAccountDto loginAccountDto = new LoginAccountDto();
+        loginAccountDto.setName(accountMap.get(channel));
+        acWorldList.setCharacterDtoList(gameServer.getCharacterList(loginAccountDto));
+        acWorldList.setChCount(acWorldList.getCharacterDtoList().size());
         channel.writeAndFlush(acWorldList.build(byteBufUtil));
     }
 
@@ -71,18 +66,22 @@ public class WorldServiceImpl implements WorldService {
     public void enterWorld(CAEnterWorld enterWorld, Channel channel) {
         if (isValidWorldFlag(enterWorld)) {
             int worldId = enterWorld.getWid();
-            if (isHasQueue(worldId)) {
+            if (gameServer.hasQueue(worldId)) {
+                LoginAccountDto loginAccountDto = new LoginAccountDto();
+                loginAccountDto.setName(accountMap.get(channel));
+                QueueStatusDto queueStatusDto = gameServer.getQueueStatus(worldId, loginAccountDto);
                 ACWorldQueue acWorldQueue = new ACWorldQueue();
                 acWorldQueue.setWid(worldId);
-                acWorldQueue.setTurnCount(5);
-                acWorldQueue.setTotalCount(8);
+                acWorldQueue.setTurnCount(queueStatusDto.getTurnCount());
+                acWorldQueue.setTotalCount(queueStatusDto.getTotalCount());
                 channel.writeAndFlush(acWorldQueue.build(byteBufUtil));
             } else {
                 int cookie = new Random().nextInt(65535);
+                AddressDto addressDto = gameServer.getAddress();
                 ACWorldCookie acWorldCookie = new ACWorldCookie();
                 acWorldCookie.setCookie(cookie);
-                acWorldCookie.setIp("127.0.0.1");
-                acWorldCookie.setPort(1239);
+                acWorldCookie.setIp(addressDto.getIp());
+                acWorldCookie.setPort(addressDto.getPort());
                 cookieMap.put(channel, cookie);
                 channel.writeAndFlush(acWorldCookie.build(byteBufUtil));
             }
@@ -108,42 +107,5 @@ public class WorldServiceImpl implements WorldService {
             cookieMap.remove(channel);
             loginService.rejectWarnedAccount(channel, 14, "Invalid cookie");
         }
-    }
-
-    @TestData
-    private Server getTempServer() {
-        Server server = new Server();
-        server.setId(1);
-        server.setName("AAEmu");
-        server.setAvailable(true);
-        if (server.isAvailable()) {
-            server.setCon(0);
-            List<Boolean> rCon = new ArrayList<>();
-            rCon.add(false); // warborn
-            rCon.add(false); // nuian
-            rCon.add(false); // returned
-            rCon.add(false); // fairy
-            rCon.add(false); // elf
-            rCon.add(false); // hariharan
-            rCon.add(false); // ferre
-            rCon.add(false); // dwarf
-            rCon.add(false); // none
-            server.setRCon(rCon);
-        }
-        return server;
-    }
-
-    @TestData
-    private Character getTempCharacter() {
-        Character character = new Character();
-        character.setAccountId(1);
-        character.setWorldId(1);
-        character.setCharId(1);
-        character.setName("Shannon");
-        character.setCharRace(1);
-        character.setCharGender(1);
-        character.setGuid("1234567890123456");
-        character.setV(0);
-        return character;
     }
 }

@@ -10,7 +10,7 @@ import com.aaemu.login.service.dto.packet.server.ACChallenge2;
 import com.aaemu.login.service.dto.packet.server.ACEnterOtp;
 import com.aaemu.login.service.dto.packet.server.ACEnterPcCert;
 import com.aaemu.login.service.dto.packet.server.ACShowArs;
-import com.aaemu.login.service.entity.TempPassword;
+import com.aaemu.login.service.model.TempPassword;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;

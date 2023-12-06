@@ -1,7 +1,7 @@
 package com.aaemu.login.service.dto.packet.server;
 
-import com.aaemu.login.service.entity.Character;
-import com.aaemu.login.service.entity.Server;
+import com.aaemu.login.service.dto.client.CharacterDto;
+import com.aaemu.login.service.dto.client.ServerDto;
 import com.aaemu.login.service.dto.packet.Packet;
 import com.aaemu.login.service.dto.packet.ServerPacket;
 import com.aaemu.login.util.ByteBufUtil;
@@ -16,9 +16,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class ACWorldList extends Packet {
     private byte count;
-    private List<Server> serverList;
+    private List<ServerDto> serverDtoList;
     private byte chCount;
-    private List<Character> characterList;
+    private List<CharacterDto> characterDtoList;
 
     public void setCount(int count) {
         this.count = (byte) count;
@@ -32,25 +32,25 @@ public class ACWorldList extends Packet {
         ByteBuf byteBuf = Unpooled.buffer();
         byteBufUtil.writeOpcode(ServerPacket.ACWorldList.getOpcode(), byteBuf);
         byteBufUtil.writeB(count, byteBuf);
-        serverList.forEach(server -> {
-            byteBufUtil.writeB(server.getId(), byteBuf);
-            byteBufUtil.writeS(server.getName(), byteBuf);
-            byteBufUtil.writeBoolean(server.isAvailable(), byteBuf);
-            if (server.isAvailable()) {
-                byteBufUtil.writeB(server.getCon(), byteBuf);
-                server.getRCon().forEach(rCon -> byteBufUtil.writeBoolean(rCon, byteBuf));
+        serverDtoList.forEach(serverDto -> {
+            byteBufUtil.writeB(serverDto.getId(), byteBuf);
+            byteBufUtil.writeS(serverDto.getName(), byteBuf);
+            byteBufUtil.writeBoolean(serverDto.isAvailable(), byteBuf);
+            if (serverDto.isAvailable()) {
+                byteBufUtil.writeB(serverDto.getCon(), byteBuf);
+                serverDto.getRCon().forEach(rCon -> byteBufUtil.writeBoolean(rCon, byteBuf));
             }
         });
         byteBufUtil.writeB(chCount, byteBuf);
-        characterList.forEach(character -> {
-            byteBufUtil.writeD(character.getAccountId(), byteBuf);
-            byteBufUtil.writeB(character.getWorldId(), byteBuf);
-            byteBufUtil.writeD(character.getCharId(), byteBuf);
-            byteBufUtil.writeS(character.getName(), byteBuf);
-            byteBufUtil.writeB(character.getCharRace(), byteBuf);
-            byteBufUtil.writeB(character.getCharGender(), byteBuf);
-            byteBufUtil.writeS(character.getGuid(), byteBuf);
-            byteBufUtil.writeQ(character.getV(), byteBuf);
+        characterDtoList.forEach(characterDto -> {
+            byteBufUtil.writeD(characterDto.getAccountId(), byteBuf);
+            byteBufUtil.writeB(characterDto.getWorldId(), byteBuf);
+            byteBufUtil.writeD(characterDto.getCharId(), byteBuf);
+            byteBufUtil.writeS(characterDto.getName(), byteBuf);
+            byteBufUtil.writeB(characterDto.getCharRace(), byteBuf);
+            byteBufUtil.writeB(characterDto.getCharGender(), byteBuf);
+            byteBufUtil.writeS(characterDto.getGuid(), byteBuf);
+            byteBufUtil.writeQ(characterDto.getV(), byteBuf);
         });
         return byteBuf;
     }
