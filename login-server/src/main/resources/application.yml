@@ -4,6 +4,9 @@ login:
 auth:
   otp: false
   otp_max_try: 3
-  ars: false          # Not release by XLGames in leaked client
-  pc_cert: false      # Not release by XLGames in leaked client
+  ars: false          # Not released by XLGames in leaked client
+  pc_cert: false      # Not released by XLGames in leaked client
   pc_cert_max_try: 3
+logger:
+  active: true
+  level: INFO

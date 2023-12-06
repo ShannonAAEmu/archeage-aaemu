@@ -87,7 +87,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public void challenge(CAChallengeResponse challengeResponse, Channel channel) {
-        log.info("Password: {}", challengeResponse.getPw());
+        log.info("Password: {}", challengeResponse.getPw());    // TODO validation
         ACChallenge2 acChallenge2 = new ACChallenge2();
         acChallenge2.setRound(2);
         acChallenge2.setSalt("1234");
