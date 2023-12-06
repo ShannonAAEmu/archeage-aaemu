@@ -10,6 +10,10 @@ public class ByteBufUtil {
     public final boolean isLittleEndianByteOrder;
     public final Charset charset;
 
+    public int readB(ByteBuf byteBuf) {
+        return isLittleEndianByteOrder ? byteBuf.readUnsignedByte() : byteBuf.readByte();
+    }
+
     public int readW(ByteBuf byteBuf) {
         return isLittleEndianByteOrder ? byteBuf.readUnsignedShortLE() : byteBuf.readUnsignedShort();
     }

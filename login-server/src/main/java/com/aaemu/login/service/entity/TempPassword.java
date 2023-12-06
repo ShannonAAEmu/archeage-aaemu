@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class OneTimePassword {
+public class TempPassword {
     private int count;
     private String password;
 }
