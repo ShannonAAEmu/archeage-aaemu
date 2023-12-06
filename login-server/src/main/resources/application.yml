@@ -1,0 +1,7 @@
+app:
+  port: 1237
+  threads: 10
+auth:
+  otp: true
+  otp_max_try: 3
+  ars: false # not release by XLGames
