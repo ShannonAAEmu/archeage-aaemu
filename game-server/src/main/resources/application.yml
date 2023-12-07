@@ -1,0 +1,10 @@
+server:
+  port: 8081
+game:
+  id: 1
+  flag: 1
+  port: 1239
+  threads: 10
+logger:
+  active: false
+  level: INFO

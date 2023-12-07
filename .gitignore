@@ -37,3 +37,4 @@ out/
 
 ### Server ###
 login-server/build
+game-server/build
