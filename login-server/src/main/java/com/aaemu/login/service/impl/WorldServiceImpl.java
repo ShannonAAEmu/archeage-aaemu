@@ -53,8 +53,8 @@ public class WorldServiceImpl implements WorldService {
     }
 
     @Override
-    public void requestList(CAListWorld listWorld, Channel channel) {
-        if (isValidListWorldFlag(listWorld)) {
+    public void requestList(CAListWorld packet, Channel channel) {
+        if (isValidListWorldFlag(packet)) {
             sendWorldList(channel);
         } else {
             cookieMap.remove(channel);
@@ -63,9 +63,9 @@ public class WorldServiceImpl implements WorldService {
     }
 
     @Override
-    public void enterWorld(CAEnterWorld enterWorld, Channel channel) {
-        if (isValidWorldFlag(enterWorld)) {
-            int worldId = enterWorld.getWid();
+    public void enterWorld(CAEnterWorld packet, Channel channel) {
+        if (isValidWorldFlag(packet)) {
+            int worldId = packet.getWid();
             if (gameServer.hasQueue(worldId)) {
                 LoginAccountDto loginAccountDto = new LoginAccountDto();
                 loginAccountDto.setName(accountMap.get(channel));
@@ -94,15 +94,15 @@ public class WorldServiceImpl implements WorldService {
     }
 
     @Override
-    public void cancelEnterWorld(CACancelEnterWorld cancelEnterWorld, Channel channel) {
+    public void cancelEnterWorld(CACancelEnterWorld packet, Channel channel) {
         cookieMap.remove(channel);
         sendWorldList(channel);
     }
 
     @Override
-    public void requestReconnect(CARequestReconnect requestReconnect, Channel channel) {
-        if (cookieMap.containsKey(channel) && cookieMap.get(channel).longValue() == requestReconnect.getCookie()) {
-            authService.requestReconnect(requestReconnect, channel);
+    public void requestReconnect(CARequestReconnect packet, Channel channel) {
+        if (cookieMap.containsKey(channel) && cookieMap.get(channel).longValue() == packet.getCookie()) {
+            authService.requestReconnect(packet, channel);
         } else {
             cookieMap.remove(channel);
             loginService.rejectWarnedAccount(channel, 14, "Invalid cookie");

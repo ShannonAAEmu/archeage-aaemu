@@ -6,7 +6,7 @@ import io.netty.channel.Channel;
 
 public interface AuthService {
 
-    void requestAuth(CARequestAuth requestAuth, Channel channel);
+    void requestAuth(CARequestAuth packet, Channel channel);
 
-    void requestReconnect(CARequestReconnect requestReconnect, Channel channel);
+    void requestReconnect(CARequestReconnect packet, Channel channel);
 }

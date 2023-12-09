@@ -13,6 +13,7 @@ import com.aaemu.login.service.dto.packet.client.CAOtpNumber;
 import com.aaemu.login.service.dto.packet.client.CAPcCertNumber;
 import com.aaemu.login.service.dto.packet.client.CARequestAuth;
 import com.aaemu.login.service.dto.packet.client.CARequestReconnect;
+import com.aaemu.login.service.exception.UnknownPacketException;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -46,25 +47,19 @@ public class ProcessingHandler extends SimpleChannelInboundHandler<Packet> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Packet packet) {
-        if (packet instanceof CARequestAuth requestAuthPacket) {
-            authService.requestAuth(requestAuthPacket, ctx.channel());
-        } else if (packet instanceof CAChallengeResponse challengeResponse) {
-            challengeService.challenge(challengeResponse, ctx.channel());
-        } else if (packet instanceof CAChallengeResponse2 challengeResponse2) {
-            challengeService.challenge(challengeResponse2, ctx.channel());
-        } else if (packet instanceof CAOtpNumber otpNumber) {
-            challengeService.processOneTimePassword(otpNumber, ctx.channel());
-        } else if (packet instanceof CAPcCertNumber pcCertNumber) {
-            challengeService.processPcCertificate(pcCertNumber, ctx.channel());
-        } else if (packet instanceof CAListWorld listWorld) {
-            worldService.requestList(listWorld, ctx.channel());
-        } else if (packet instanceof CAEnterWorld enterWorld) {
-            worldService.enterWorld(enterWorld, ctx.channel());
-        } else if (packet instanceof CACancelEnterWorld cancelEnterWorld) {
-            worldService.cancelEnterWorld(cancelEnterWorld, ctx.channel());
-        } else if (packet instanceof CARequestReconnect requestReconnect) {
-            worldService.requestReconnect(requestReconnect, ctx.channel());
+    protected void channelRead0(ChannelHandlerContext ctx, Packet clientPacket) {
+        switch (clientPacket) {
+            case CARequestAuth packet -> authService.requestAuth(packet, ctx.channel());
+            case CAChallengeResponse packet -> challengeService.challenge(packet, ctx.channel());
+            case CAChallengeResponse2 packet -> challengeService.challenge(packet, ctx.channel());
+            case CAOtpNumber packet -> challengeService.processOneTimePassword(packet, ctx.channel());
+            case CAPcCertNumber packet -> challengeService.processPcCertificate(packet, ctx.channel());
+            case CAListWorld packet -> worldService.requestList(packet, ctx.channel());
+            case CAEnterWorld packet -> worldService.enterWorld(packet, ctx.channel());
+            case CACancelEnterWorld packet -> worldService.cancelEnterWorld(packet, ctx.channel());
+            case CARequestReconnect packet -> worldService.requestReconnect(packet, ctx.channel());
+            default ->
+                    throw new UnknownPacketException(String.format("Unknown packet for processing: %s", clientPacket));
         }
     }
 }

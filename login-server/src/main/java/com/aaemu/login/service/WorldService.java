@@ -8,11 +8,11 @@ import io.netty.channel.Channel;
 
 public interface WorldService {
 
-    void requestList(CAListWorld listWorld, Channel channel);
+    void requestList(CAListWorld packet, Channel channel);
 
-    void enterWorld(CAEnterWorld enterWorld, Channel channel);
+    void enterWorld(CAEnterWorld packet, Channel channel);
 
-    void cancelEnterWorld(CACancelEnterWorld cancelEnterWorld, Channel channel);
+    void cancelEnterWorld(CACancelEnterWorld packet, Channel channel);
 
-    void requestReconnect(CARequestReconnect requestReconnect, Channel channel);
+    void requestReconnect(CARequestReconnect packet, Channel channel);
 }

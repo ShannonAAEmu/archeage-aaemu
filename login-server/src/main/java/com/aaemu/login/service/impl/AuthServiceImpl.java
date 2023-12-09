@@ -27,16 +27,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void requestAuth(CARequestAuth requestAuth, Channel channel) {
-        log.info("Request auth from account: {}", requestAuth.getAccount());
-        accountMap.replace(channel, requestAuth.getAccount());
+    public void requestAuth(CARequestAuth packet, Channel channel) {
+        log.info("Request auth from account: {}", packet.getAccount());
+        accountMap.replace(channel, packet.getAccount());
         sendChallenge(channel);
     }
 
     @Override
-    public void requestReconnect(CARequestReconnect requestReconnect, Channel channel) {
-        log.info("Request reconnect from account id: {}, world id: {}", requestReconnect.getAid(), requestReconnect.getWid());
-        accountMap.replace(channel, String.valueOf(requestReconnect.getAid()));
+    public void requestReconnect(CARequestReconnect packet, Channel channel) {
+        log.info("Request reconnect from account id: {}, world id: {}", packet.getAid(), packet.getWid());
+        accountMap.replace(channel, String.valueOf(packet.getAid()));
         sendChallenge(channel);
     }
 }

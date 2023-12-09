@@ -8,11 +8,11 @@ import io.netty.channel.Channel;
 
 public interface ChallengeService {
 
-    void challenge(CAChallengeResponse challengeResponse, Channel channel);
+    void challenge(CAChallengeResponse packet, Channel channel);
 
-    void challenge(CAChallengeResponse2 challengeResponse2, Channel channel);
+    void challenge(CAChallengeResponse2 packet, Channel channel);
 
-    void processOneTimePassword(CAOtpNumber caOtpNumber, Channel channel);
+    void processOneTimePassword(CAOtpNumber packet, Channel channel);
 
-    void processPcCertificate(CAPcCertNumber caPcCertNumber, Channel channel);
+    void processPcCertificate(CAPcCertNumber packet, Channel channel);
 }
