@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -17,15 +17,15 @@ import java.util.Map;
 public class LoginServerConfig {
 
     @Bean
-    public ByteBufUtil byteBufUtil() {
-        return new ByteBufUtil(true, StandardCharsets.US_ASCII);
+    public RestClient restClient() {
+        return RestClient.builder()
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 
     @Bean
-    public WebClient jsonWebClient() {
-        return WebClient.builder()
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+    public ByteBufUtil byteBufUtil() {
+        return new ByteBufUtil(true, StandardCharsets.US_ASCII);
     }
 
     @Bean

@@ -9,8 +9,9 @@ import com.aaemu.login.service.dto.client.ServerDto;
 import com.aaemu.login.service.exception.LoginServerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,18 +19,17 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GameServerImpl implements GameServer {
-    private final WebClient jsonWebClient;
+    private final RestClient restClient;
 
     @Value("${clients.game.url}")
     private String gameServerUrl;
 
     @Override
     public AddressDto getAddress() {
-        AddressDto addressDto = jsonWebClient.get()
+        AddressDto addressDto = restClient.get()
                 .uri(String.format("%s/%s", gameServerUrl, "address"))
                 .retrieve()
-                .bodyToMono(AddressDto.class)
-                .block();
+                .body(AddressDto.class);
         if (addressDto == null || addressDto.getIp() == null || addressDto.getIp().isBlank() || addressDto.getPort() <= 0) {
             throw new LoginServerException("Not found game server address");
         }
@@ -38,44 +38,40 @@ public class GameServerImpl implements GameServer {
 
     @Override
     public List<ServerDto> getServerList() {
-        List<ServerDto> serverDtoList = jsonWebClient.get()
+        List<ServerDto> serverDtoList = restClient.get()
                 .uri(String.format("%s/%s", gameServerUrl, "list"))
                 .retrieve()
-                .bodyToFlux(ServerDto.class)
-                .collectList()
-                .block();
+                .body(new ParameterizedTypeReference<>() {
+                });
         return (serverDtoList == null || serverDtoList.isEmpty()) ? new ArrayList<>(0) : serverDtoList;
     }
 
     @Override
     public List<CharacterDto> getCharacterList(LoginAccountDto loginAccountDto) {
-        List<CharacterDto> characterDtoList = jsonWebClient.post()
+        List<CharacterDto> characterDtoList = restClient.post()
                 .uri(String.format("%s/%s/%s", gameServerUrl, "account", "characters"))
-                .bodyValue(loginAccountDto)
+                .body(loginAccountDto)
                 .retrieve()
-                .bodyToFlux(CharacterDto.class)
-                .collectList()
-                .block();
+                .body(new ParameterizedTypeReference<>() {
+                });
         return (characterDtoList == null || characterDtoList.isEmpty()) ? new ArrayList<>(0) : characterDtoList;
     }
 
     @Override
     public Boolean hasQueue(int worldId) {
-        return Boolean.TRUE.toString().equals(jsonWebClient.get()
+        return Boolean.TRUE.toString().equals(restClient.get()
                 .uri(String.format("%s/%d/%s", gameServerUrl, worldId, "queue"))
                 .retrieve()
-                .bodyToMono(String.class)
-                .block());
+                .body(String.class));
     }
 
     @Override
     public QueueStatusDto getQueueStatus(int worldId, LoginAccountDto loginAccountDto) {
-        QueueStatusDto queueStatusDto = jsonWebClient.post()
+        QueueStatusDto queueStatusDto = restClient.post()
                 .uri(String.format("%s/%d/%s", gameServerUrl, worldId, "status"))
-                .bodyValue(loginAccountDto)
+                .body(loginAccountDto)
                 .retrieve()
-                .bodyToMono(QueueStatusDto.class)
-                .block();
+                .body(QueueStatusDto.class);
         if (queueStatusDto == null) {
             throw new LoginServerException("Not found game server address");
         }
