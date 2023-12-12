@@ -21,7 +21,7 @@ public class ACWorldQueue extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACWorldQueue.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACWorldQueue, byteBuf);
         byteBufUtil.writeB(wid, byteBuf);
         byteBufUtil.writeW(turnCount, byteBuf);
         byteBufUtil.writeW(totalCount, byteBuf);

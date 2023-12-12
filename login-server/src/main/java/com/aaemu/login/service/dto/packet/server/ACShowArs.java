@@ -16,7 +16,7 @@ public class ACShowArs extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACShowArs.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACShowArs, byteBuf);
         byteBufUtil.writeS(num, byteBuf);
         byteBufUtil.writeD(timeout, byteBuf);
         return byteBuf;

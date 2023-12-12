@@ -16,7 +16,7 @@ public class ACAuthResponse extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACAuthResponse.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACAuthResponse, byteBuf);
         byteBufUtil.writeD(accountId, byteBuf);
         byteBufUtil.writeS(wsk, byteBuf);
         return byteBuf;

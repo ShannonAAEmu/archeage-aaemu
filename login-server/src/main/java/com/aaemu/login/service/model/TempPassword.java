@@ -1,4 +1,4 @@
-package com.aaemu.login.service.entity;
+package com.aaemu.login.service.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

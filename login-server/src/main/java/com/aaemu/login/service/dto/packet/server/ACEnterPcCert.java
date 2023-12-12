@@ -16,7 +16,7 @@ public class ACEnterPcCert extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACEnterPcCert.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACEnterPcCert, byteBuf);
         byteBufUtil.writeD(mt, byteBuf);
         byteBufUtil.writeD(ct, byteBuf);
         return byteBuf;

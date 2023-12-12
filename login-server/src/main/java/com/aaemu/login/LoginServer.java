@@ -1,7 +1,7 @@
 package com.aaemu.login;
 
+import com.aaemu.login.handler.CodecHandler;
 import com.aaemu.login.handler.ExceptionHandler;
-import com.aaemu.login.handler.PacketCodec;
 import com.aaemu.login.handler.ProcessingHandler;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.bootstrap.ServerBootstrap;
@@ -11,13 +11,21 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.kqueue.KQueue;
+import io.netty.channel.kqueue.KQueueEventLoopGroup;
+import io.netty.channel.kqueue.KQueueServerSocketChannel;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +38,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class LoginServer {
-    private final Class<? extends ServerSocketChannel> serverSocketChannel;
     private final ProcessingHandler processingHandler;
-    private final EventExecutorGroup eventExecutor;
-    private final EventLoopGroup parentEventGroup;
-    private final EventLoopGroup childEventGroup;
-    private final ByteBufUtil byteBufUtil;
     private final Map<Channel, String> accountMap;
+    private final ByteBufUtil byteBufUtil;
+
+    @Value("${login.threads}")
+    private int eventExecutorGroupThreads;
 
     @Value("${login.port}")
     private int port;
@@ -48,45 +55,68 @@ public class LoginServer {
     private String logLevel;
 
     @PostConstruct
-    public void start() throws InterruptedException {
-        try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap
-                    .group(parentEventGroup, childEventGroup)
-                    .channel(serverSocketChannel)
-                    .localAddress(port)
-                    .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    .childOption(ChannelOption.TCP_NODELAY, true)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-
-                        @Override
-                        public void initChannel(@NonNull SocketChannel channel) {
-                            channel.pipeline().addLast("exception", new ExceptionHandler(accountMap));
-                            if (isActiveLog) {
-                                channel.pipeline().addLast("logger", new LoggingHandler(LogLevel.valueOf(logLevel)));
-                            }
-                            channel.pipeline().addLast("codec", new PacketCodec(byteBufUtil));
-                            channel.pipeline().addLast(eventExecutor, processingHandler);
-                        }
-                    });
-            ChannelFuture future = bootstrap.bind().sync();
-            if (future.isSuccess()) {
-                log.info("Login server started on port: {}", port);
+    public void start() {
+        Thread thread = Thread.startVirtualThread(() -> {
+            EventLoopGroup parentEventGroup;
+            EventLoopGroup childEventGroup;
+            if (Epoll.isAvailable()) {
+                parentEventGroup = new EpollEventLoopGroup();
+            } else if (KQueue.isAvailable()) {
+                parentEventGroup = new KQueueEventLoopGroup();
+            } else {
+                parentEventGroup = new NioEventLoopGroup();
             }
-            future.channel().closeFuture().sync();
-        } finally {
-            parentEventGroup.shutdownGracefully();
-            childEventGroup.shutdownGracefully();
-            log.info("Stop login server");
-        }
-    }
+            if (Epoll.isAvailable()) {
+                childEventGroup = new EpollEventLoopGroup();
+            } else if (KQueue.isAvailable()) {
+                childEventGroup = new KQueueEventLoopGroup();
+            } else {
+                childEventGroup = new NioEventLoopGroup();
+            }
+            Class<? extends ServerSocketChannel> serverSocketChannel;
+            if (Epoll.isAvailable()) {
+                serverSocketChannel = EpollServerSocketChannel.class;
+            } else if (KQueue.isAvailable()) {
+                serverSocketChannel = KQueueServerSocketChannel.class;
+            } else {
+                serverSocketChannel = NioServerSocketChannel.class;
+            }
+            EventExecutorGroup eventExecutor = new DefaultEventExecutorGroup(eventExecutorGroupThreads);
 
-    @PreDestroy
-    public void shutdownGracefully() {
-        parentEventGroup.shutdownGracefully();
-        childEventGroup.shutdownGracefully();
-        log.info("Stop login server");
-    }
+            try {
+                ServerBootstrap bootstrap = new ServerBootstrap();
+                bootstrap
+                        .group(parentEventGroup, childEventGroup)
+                        .channel(serverSocketChannel)
+                        .localAddress(port)
+                        .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                        .childOption(ChannelOption.SO_KEEPALIVE, true)
+                        .childOption(ChannelOption.TCP_NODELAY, true)
+                        .childHandler(new ChannelInitializer<SocketChannel>() {
 
+                            @Override
+                            public void initChannel(@NonNull SocketChannel channel) {
+                                channel.pipeline().addLast("exception", new ExceptionHandler(accountMap));
+                                if (isActiveLog) {
+                                    channel.pipeline().addLast("logger", new LoggingHandler(LogLevel.valueOf(logLevel)));
+                                }
+                                channel.pipeline().addLast("codec", new CodecHandler(byteBufUtil));
+                                channel.pipeline().addLast(eventExecutor, processingHandler);
+                            }
+                        });
+                ChannelFuture future = bootstrap.bind().sync();
+                if (future.isSuccess()) {
+                    log.info("Login server started on port: {}", port);
+                }
+                future.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } finally {
+                parentEventGroup.shutdownGracefully();
+                childEventGroup.shutdownGracefully();
+                log.info("Stop login server");
+            }
+        });
+        thread.setName("netty-login");
+    }
 }

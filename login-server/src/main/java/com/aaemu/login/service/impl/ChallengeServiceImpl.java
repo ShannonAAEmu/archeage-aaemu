@@ -10,7 +10,7 @@ import com.aaemu.login.service.dto.packet.server.ACChallenge2;
 import com.aaemu.login.service.dto.packet.server.ACEnterOtp;
 import com.aaemu.login.service.dto.packet.server.ACEnterPcCert;
 import com.aaemu.login.service.dto.packet.server.ACShowArs;
-import com.aaemu.login.service.entity.TempPassword;
+import com.aaemu.login.service.model.TempPassword;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -86,8 +86,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void challenge(CAChallengeResponse challengeResponse, Channel channel) {
-        log.info("Password: {}", challengeResponse.getPw());    // TODO validation
+    public void challenge(CAChallengeResponse packet, Channel channel) {
+        log.info("Password: {}", packet.getPw());    // TODO validation
         ACChallenge2 acChallenge2 = new ACChallenge2();
         acChallenge2.setRound(2);
         acChallenge2.setSalt("1234");
@@ -96,7 +96,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void challenge(CAChallengeResponse2 challengeResponse2, Channel channel) {
+    public void challenge(CAChallengeResponse2 packet, Channel channel) {
         if (useOtp) {
             sendOtp(channel, 0);
         } else if (useArs) {
@@ -111,9 +111,9 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void processOneTimePassword(CAOtpNumber caOtpNumber, Channel channel) {
+    public void processOneTimePassword(CAOtpNumber packet, Channel channel) {
         if (otpMap.containsKey(channel)) {
-            if (otpMap.get(channel).getPassword().equals(caOtpNumber.getNum())) {
+            if (otpMap.get(channel).getPassword().equals(packet.getNum())) {
                 loginService.allowLogin(channel);
             } else {
                 sendPcCert(channel, otpMap.get(channel).getCount() + 1);
@@ -124,9 +124,9 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void processPcCertificate(CAPcCertNumber caPcCertNumber, Channel channel) {
+    public void processPcCertificate(CAPcCertNumber packet, Channel channel) {
         if (pcCertMap.containsKey(channel)) {
-            if (pcCertMap.get(channel).getPassword().equals(caPcCertNumber.getNum())) {
+            if (pcCertMap.get(channel).getPassword().equals(packet.getNum())) {
                 loginService.allowLogin(channel);
             } else {
                 sendOtp(channel, pcCertMap.get(channel).getCount() + 1);

@@ -1,0 +1,11 @@
+server:
+  port: 8082
+stream:
+  port: 1250
+  threads: 10
+logger:
+  active: true
+  level: INFO
+clients:
+  game:
+    url: http://localhost:8081/server
