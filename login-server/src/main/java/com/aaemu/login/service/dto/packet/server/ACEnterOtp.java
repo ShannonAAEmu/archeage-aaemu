@@ -16,7 +16,7 @@ public class ACEnterOtp extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACEnterOtp.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACEnterOtp, byteBuf);
         byteBufUtil.writeD(mt, byteBuf);
         byteBufUtil.writeD(ct, byteBuf);
         return byteBuf;

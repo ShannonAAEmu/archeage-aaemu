@@ -13,7 +13,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,23 +37,21 @@ public class GameServerImpl implements GameServer {
 
     @Override
     public List<ServerDto> getServerList() {
-        List<ServerDto> serverDtoList = restClient.get()
+        return restClient.get()
                 .uri(String.format("%s/%s", gameServerUrl, "list"))
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {
                 });
-        return (serverDtoList == null || serverDtoList.isEmpty()) ? new ArrayList<>(0) : serverDtoList;
     }
 
     @Override
     public List<CharacterDto> getCharacterList(LoginAccountDto loginAccountDto) {
-        List<CharacterDto> characterDtoList = restClient.post()
+        return restClient.post()
                 .uri(String.format("%s/%s/%s", gameServerUrl, "account", "characters"))
                 .body(loginAccountDto)
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {
                 });
-        return (characterDtoList == null || characterDtoList.isEmpty()) ? new ArrayList<>(0) : characterDtoList;
     }
 
     @Override

@@ -30,7 +30,7 @@ public class ACWorldList extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACWorldList.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACWorldList, byteBuf);
         byteBufUtil.writeB(count, byteBuf);
         serverDtoList.forEach(serverDto -> {
             byteBufUtil.writeB(serverDto.getId(), byteBuf);

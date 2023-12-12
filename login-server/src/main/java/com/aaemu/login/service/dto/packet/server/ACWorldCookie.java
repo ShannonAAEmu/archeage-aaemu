@@ -17,7 +17,7 @@ public class ACWorldCookie extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACWorldCookie.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACWorldCookie, byteBuf);
         byteBufUtil.writeD(cookie, byteBuf);
         byteBufUtil.writeS(ip, byteBuf);
         byteBufUtil.writeW(port, byteBuf);

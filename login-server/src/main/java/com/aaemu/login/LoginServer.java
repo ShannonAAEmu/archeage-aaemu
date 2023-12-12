@@ -1,7 +1,7 @@
 package com.aaemu.login;
 
+import com.aaemu.login.handler.CodecHandler;
 import com.aaemu.login.handler.ExceptionHandler;
-import com.aaemu.login.handler.PacketCodec;
 import com.aaemu.login.handler.ProcessingHandler;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.bootstrap.ServerBootstrap;
@@ -100,7 +100,7 @@ public class LoginServer {
                                 if (isActiveLog) {
                                     channel.pipeline().addLast("logger", new LoggingHandler(LogLevel.valueOf(logLevel)));
                                 }
-                                channel.pipeline().addLast("codec", new PacketCodec(byteBufUtil));
+                                channel.pipeline().addLast("codec", new CodecHandler(byteBufUtil));
                                 channel.pipeline().addLast(eventExecutor, processingHandler);
                             }
                         });
@@ -117,6 +117,6 @@ public class LoginServer {
                 log.info("Stop login server");
             }
         });
-        thread.setName("netty");
+        thread.setName("netty-login");
     }
 }

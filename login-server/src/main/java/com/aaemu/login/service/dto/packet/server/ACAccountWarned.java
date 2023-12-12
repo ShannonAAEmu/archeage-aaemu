@@ -72,7 +72,7 @@ public class ACAccountWarned extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACAccountWarned.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACAccountWarned, byteBuf);
         byteBufUtil.writeB(source, byteBuf);
         byteBufUtil.writeS(msg, byteBuf);
         return byteBuf;

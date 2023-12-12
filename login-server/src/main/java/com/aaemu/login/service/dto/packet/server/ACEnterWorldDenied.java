@@ -71,7 +71,7 @@ public class ACEnterWorldDenied extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACEnterWorldDenied.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACEnterWorldDenied, byteBuf);
         byteBufUtil.writeB(reason, byteBuf);
         return byteBuf;
     }

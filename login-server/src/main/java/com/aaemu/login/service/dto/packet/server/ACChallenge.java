@@ -16,7 +16,7 @@ public class ACChallenge extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACChallenge.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACChallenge, byteBuf);
         byteBufUtil.writeD(salt, byteBuf);
         for (int i = 0; i < 4; i++) {
             byteBufUtil.writeD(ch, byteBuf);

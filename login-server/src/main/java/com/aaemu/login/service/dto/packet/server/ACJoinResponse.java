@@ -24,7 +24,7 @@ public class ACJoinResponse extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACJoinResponse.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACJoinResponse, byteBuf);
         byteBufUtil.writeW(reason, byteBuf);
         byteBufUtil.writeQ(afs, byteBuf);
         return byteBuf;

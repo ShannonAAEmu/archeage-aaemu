@@ -73,7 +73,7 @@ public class ACLoginDenied extends Packet {
 
     public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACLoginDenied.getOpcode(), byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.ACLoginDenied, byteBuf);
         byteBufUtil.writeB(reason, byteBuf);
         byteBufUtil.writeS(vp, byteBuf);
         byteBufUtil.writeS(msg, byteBuf);
