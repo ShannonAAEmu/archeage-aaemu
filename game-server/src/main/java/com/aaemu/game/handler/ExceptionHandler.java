@@ -14,16 +14,16 @@ import java.util.Map;
 @ChannelHandler.Sharable
 @Slf4j
 public class ExceptionHandler extends ChannelDuplexHandler {
-    private final Map<Channel, String> accountMap;
+    private final Map<Channel, Long> accountMap;
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (cause instanceof SocketException socketException) {
             if (socketException.getMessage().equals("Connection reset")) {
-                if (accountMap.get(ctx.channel()).chars().allMatch(Character::isDigit)) {
+                if (accountMap.get(ctx.channel()) != null) {
                     log.warn("Disconnect account id: {}", accountMap.get(ctx.channel()));
                 } else {
-                    log.warn("Disconnect account: {}", accountMap.get(ctx.channel()));
+                    log.warn("Disconnect client");
                 }
                 accountMap.remove(ctx.channel());
             } else {

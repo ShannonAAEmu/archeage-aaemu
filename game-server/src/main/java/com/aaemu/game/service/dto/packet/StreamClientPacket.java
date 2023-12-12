@@ -5,18 +5,17 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum ClientPacket {
-    X2_ENTER_WORLD("0"),
-    CS_LIST_CHARACTER("19");
+public enum StreamClientPacket {
+    TC_JOIN_RESPONSE("1");
 
     private final String opcode;
 
-    public static ClientPacket getByOpcode(String opcode) {
-        for (ClientPacket packet : values()) {
+    public static StreamClientPacket getByOpcode(String opcode) {
+        for (StreamClientPacket packet : values()) {
             if (packet.getOpcode().equalsIgnoreCase(opcode)) {
                 return packet;
             }
         }
-        throw new RuntimeException(String.format("Unknown client packet opcode: %s", opcode));
+        throw new RuntimeException(String.format("Unknown stream server packet opcode: %s", opcode));
     }
 }

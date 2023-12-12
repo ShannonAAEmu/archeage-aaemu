@@ -2,7 +2,8 @@ package com.aaemu.game;
 
 
 import com.aaemu.game.handler.ExceptionHandler;
-import com.aaemu.game.handler.PacketCodec;
+import com.aaemu.game.handler.CodecHandler;
+import com.aaemu.game.handler.LogHandler;
 import com.aaemu.game.handler.ProcessingHandler;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.bootstrap.ServerBootstrap;
@@ -23,7 +24,6 @@ import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 import jakarta.annotation.PostConstruct;
@@ -40,7 +40,7 @@ import java.util.Map;
 @Slf4j
 public class GameServer {
     private final ProcessingHandler processingHandler;
-    private final Map<Channel, String> accountMap;
+    private final Map<Channel, Long> accountMap;
     private final ByteBufUtil byteBufUtil;
 
     @Value("${game.threads}")
@@ -98,9 +98,9 @@ public class GameServer {
                             public void initChannel(@NonNull SocketChannel channel) {
                                 channel.pipeline().addLast("exception", new ExceptionHandler(accountMap));
                                 if (isActiveLog) {
-                                    channel.pipeline().addLast("logger", new LoggingHandler(LogLevel.valueOf(logLevel)));
+                                    channel.pipeline().addLast("logger", new LogHandler(byteBufUtil, LogLevel.valueOf(logLevel)));
                                 }
-                                channel.pipeline().addLast("codec", new PacketCodec(byteBufUtil));
+                                channel.pipeline().addLast("codec", new CodecHandler(byteBufUtil));
                                 channel.pipeline().addLast(eventExecutor, processingHandler);
                             }
                         });
@@ -117,6 +117,6 @@ public class GameServer {
                 log.info("Stop game server");
             }
         });
-        thread.setName("netty");
+        thread.setName("netty-game");
     }
 }

@@ -6,28 +6,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ServerPacket {
-//    ACJoinResponse("0"),
-//    ACChallenge("2"),
-//    ACAuthResponse("3"),
-//    ACChallenge2("4"),
-//    ACEnterOtp("5"),
-//    ACShowArs("6"),
-//    ACEnterPcCert("7"),
-//    ACWorldList("8"),
-//    ACWorldQueue("9"),
-//    ACWorldCookie("A"),
-//    ACEnterWorldDenied("B"),
-//    ACLoginDenied("C"),
-//    ACAccountWarned("D");
-//
-//    private final String opcode;
-//
-//    public static ServerPacket getByOpcode(String opcode) {
-//        for (ServerPacket packet : values()) {
-//            if (packet.getOpcode().equalsIgnoreCase(opcode)) {
-//                return packet;
-//            }
-//        }
-//        throw new RuntimeException(String.format("Unknown server packet opcode: %s", opcode));
-//    }
+    X2_ENTER_WORLD_RESPONSE("0"),
+    SC_INITIAL_CONFIG("5"),
+    SC_CHAT_SPAM_DELAY("B0"),
+    SC_ACCOUNT_INFO("198"),
+    SC_CHARACTER_LIST("2D");
+
+    private final String opcode;
+
+    public static ServerPacket getByOpcode(String opcode) {
+        for (ServerPacket packet : values()) {
+            if (packet.getOpcode().equalsIgnoreCase(opcode)) {
+                return packet;
+            }
+        }
+        throw new RuntimeException(String.format("Unknown server packet opcode: %s", opcode));
+    }
 }

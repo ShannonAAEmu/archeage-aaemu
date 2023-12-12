@@ -19,7 +19,7 @@ public class GameServerConfig {
     }
 
     @Bean
-    public Map<Channel, String> accountMap() {
+    public Map<Channel, Long> accountMap() {
         return new HashMap<>();
     }
 

@@ -1,16 +1,20 @@
 package com.aaemu.game.controller;
 
+import com.aaemu.game.service.AuthService;
 import com.aaemu.game.service.annotation.TestData;
 import com.aaemu.game.service.dto.client.AddressDto;
 import com.aaemu.game.service.dto.client.CharacterDto;
 import com.aaemu.game.service.dto.client.LoginAccountDto;
 import com.aaemu.game.service.dto.client.QueueStatusDto;
 import com.aaemu.game.service.dto.client.ServerDto;
+import com.aaemu.game.service.dto.client.StreamCharacterDto;
 import com.aaemu.game.service.exception.GameServerException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ServerController {
+    private final AuthService authService;
 
     @Value("${game.port}")
     private int gamePort;
@@ -61,7 +66,7 @@ public class ServerController {
     public String hasQueue(@PathVariable int id) {
         if (serverId == id) {
             // TODO queue logic
-            return String.valueOf(true);
+            return String.valueOf(isHasTestQueue());
         }
         throw new GameServerException("Invalid server id");
     }
@@ -77,6 +82,17 @@ public class ServerController {
             return queueStatusDto;
         }
         throw new GameServerException("Invalid server id");
+    }
+
+    @PostMapping(value = "/stream/join", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> getStreamJoin(@RequestBody StreamCharacterDto characterDto) {
+        authService.changeState(characterDto.getAccountId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TestData
+    private boolean isHasTestQueue() {
+        return false;
     }
 
     @TestData
@@ -101,6 +117,7 @@ public class ServerController {
         }
         return server;
     }
+}
 
 //    @TestData
 //    private Character getTempCharacter() {
@@ -115,4 +132,4 @@ public class ServerController {
 //        character.setV(0);
 //        return character;
 //    }
-}
+
