@@ -4,6 +4,7 @@ import com.aaemu.login.service.AuthService;
 import com.aaemu.login.service.dto.packet.client.CARequestAuth;
 import com.aaemu.login.service.dto.packet.client.CARequestReconnect;
 import com.aaemu.login.service.dto.packet.server.ACChallenge;
+import com.aaemu.login.service.model.Account;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthServiceImpl implements AuthService {
+    private final Map<Channel, Account> accountMap;
     private final ByteBufUtil byteBufUtil;
-    private final Map<Channel, String> accountMap;
 
     private void sendChallenge(Channel channel) {
         ACChallenge acChallenge = new ACChallenge();
@@ -29,14 +30,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void requestAuth(CARequestAuth packet, Channel channel) {
         log.info("Request auth from account: {}", packet.getAccount());
-        accountMap.replace(channel, packet.getAccount());
+        accountMap.replace(channel, new Account(packet.getAccount()));
         sendChallenge(channel);
     }
 
     @Override
     public void requestReconnect(CARequestReconnect packet, Channel channel) {
         log.info("Request reconnect from account id: {}, world id: {}", packet.getAid(), packet.getWid());
-        accountMap.replace(channel, String.valueOf(packet.getAid()));
+        accountMap.replace(channel, new Account(packet.getAid()));
         sendChallenge(channel);
     }
 }

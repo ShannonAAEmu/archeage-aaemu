@@ -2,19 +2,16 @@ package com.aaemu.login.service.dto.packet.server;
 
 import com.aaemu.login.service.dto.client.CharacterDto;
 import com.aaemu.login.service.dto.client.ServerDto;
-import com.aaemu.login.service.dto.packet.Packet;
-import com.aaemu.login.service.dto.packet.ServerPacket;
+import com.aaemu.login.service.enums.ServerPacket;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ACWorldList extends Packet {
+public class ACWorldList {
     private byte count;
     private List<ServerDto> serverDtoList;
     private byte chCount;

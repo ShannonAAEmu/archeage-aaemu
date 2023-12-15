@@ -1,4 +1,4 @@
-package com.aaemu.login.service.dto.packet;
+package com.aaemu.login.service.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
