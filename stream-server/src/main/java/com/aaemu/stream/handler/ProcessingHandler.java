@@ -1,9 +1,10 @@
 package com.aaemu.stream.handler;
 
 import com.aaemu.stream.service.AuthService;
-import com.aaemu.stream.service.dto.packet.Packet;
+import com.aaemu.stream.service.dto.packet.ClientPacket;
 import com.aaemu.stream.service.dto.packet.client.CTJoin;
 import com.aaemu.stream.service.exception.PacketException;
+import com.aaemu.stream.service.model.Account;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,8 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @ChannelHandler.Sharable
 @Slf4j
-public class ProcessingHandler extends SimpleChannelInboundHandler<Packet> {
-    private final Map<Channel, Long> accountMap;
+public class ProcessingHandler extends SimpleChannelInboundHandler<ClientPacket> {
+    private final Map<Channel, Account> accountMap;
     private final AuthService authService;
 
     @Override
@@ -35,7 +36,7 @@ public class ProcessingHandler extends SimpleChannelInboundHandler<Packet> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Packet clientPacket) {
+    protected void channelRead0(ChannelHandlerContext ctx, ClientPacket clientPacket) {
         switch (clientPacket) {
             case CTJoin packet -> authService.enterWorld(packet, ctx.channel());
             default -> throw new PacketException(String.format("Unknown packet for processing: %s", clientPacket));

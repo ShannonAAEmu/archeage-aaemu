@@ -1,8 +1,8 @@
 package com.aaemu.stream.client;
 
-import com.aaemu.stream.service.dto.client.StreamCharacterDto;
+import com.aaemu.stream.service.dto.client.CharacterDto;
 
 public interface GameServer {
 
-    void sendAuth(StreamCharacterDto characterDto);
+    void sendAuth(CharacterDto characterDto);
 }

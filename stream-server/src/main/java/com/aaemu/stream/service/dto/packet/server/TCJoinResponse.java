@@ -1,16 +1,13 @@
 package com.aaemu.stream.service.dto.packet.server;
 
-import com.aaemu.stream.service.dto.packet.Packet;
-import com.aaemu.stream.service.dto.packet.ServerPacket;
+import com.aaemu.stream.service.enums.ServerPacket;
 import com.aaemu.stream.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class TCJoinResponse extends Packet {
+public class TCJoinResponse {
     private byte response;
 
     public void setResponse(int response) {

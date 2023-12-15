@@ -1,5 +1,6 @@
-package com.aaemu.stream.service.dto.packet;
+package com.aaemu.stream.service.enums;
 
+import com.aaemu.stream.service.exception.PacketException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,6 @@ public enum ServerPacket {
                 return packet;
             }
         }
-        throw new RuntimeException(String.format("Unknown server packet opcode: %s", opcode));
+        throw new PacketException(String.format("Unknown server packet opcode: %s", opcode));
     }
 }

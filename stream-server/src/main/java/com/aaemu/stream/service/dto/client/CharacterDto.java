@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class StreamCharacterDto {
+public class CharacterDto {
 
     @JsonProperty("account_id")
     private long accountId;
