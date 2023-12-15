@@ -3,7 +3,7 @@ package com.aaemu.login.handler;
 import com.aaemu.login.service.AuthService;
 import com.aaemu.login.service.ChallengeService;
 import com.aaemu.login.service.WorldService;
-import com.aaemu.login.service.dto.packet.Packet;
+import com.aaemu.login.service.dto.packet.ClientPacket;
 import com.aaemu.login.service.dto.packet.client.CACancelEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse;
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse2;
@@ -13,7 +13,8 @@ import com.aaemu.login.service.dto.packet.client.CAOtpNumber;
 import com.aaemu.login.service.dto.packet.client.CAPcCertNumber;
 import com.aaemu.login.service.dto.packet.client.CARequestAuth;
 import com.aaemu.login.service.dto.packet.client.CARequestReconnect;
-import com.aaemu.login.service.exception.UnknownPacketException;
+import com.aaemu.login.service.exception.PacketException;
+import com.aaemu.login.service.model.Account;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,8 +29,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @ChannelHandler.Sharable
 @Slf4j
-public class ProcessingHandler extends SimpleChannelInboundHandler<Packet> {
-    private final Map<Channel, String> accountMap;
+public class ProcessingHandler extends SimpleChannelInboundHandler<ClientPacket> {
+    private final Map<Channel, Account> accountMap;
     private final AuthService authService;
     private final ChallengeService challengeService;
     private final WorldService worldService;
@@ -47,7 +48,7 @@ public class ProcessingHandler extends SimpleChannelInboundHandler<Packet> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Packet clientPacket) {
+    protected void channelRead0(ChannelHandlerContext ctx, ClientPacket clientPacket) {
         switch (clientPacket) {
             case CARequestAuth packet -> authService.requestAuth(packet, ctx.channel());
             case CAChallengeResponse packet -> challengeService.challenge(packet, ctx.channel());
@@ -58,8 +59,7 @@ public class ProcessingHandler extends SimpleChannelInboundHandler<Packet> {
             case CAEnterWorld packet -> worldService.enterWorld(packet, ctx.channel());
             case CACancelEnterWorld packet -> worldService.cancelEnterWorld(packet, ctx.channel());
             case CARequestReconnect packet -> worldService.requestReconnect(packet, ctx.channel());
-            default ->
-                    throw new UnknownPacketException(String.format("Unknown packet for processing: %s", clientPacket));
+            default -> throw new PacketException(String.format("Unknown packet for processing: %s", clientPacket));
         }
     }
 }

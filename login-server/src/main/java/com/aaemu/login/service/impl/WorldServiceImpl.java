@@ -15,6 +15,7 @@ import com.aaemu.login.service.dto.packet.server.ACEnterWorldDenied;
 import com.aaemu.login.service.dto.packet.server.ACWorldCookie;
 import com.aaemu.login.service.dto.packet.server.ACWorldList;
 import com.aaemu.login.service.dto.packet.server.ACWorldQueue;
+import com.aaemu.login.service.model.Account;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +27,12 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class WorldServiceImpl implements WorldService {
-    private final ByteBufUtil byteBufUtil;
+    private final Map<Channel, Integer> cookieMap;
+    private final Map<Channel, Account> accountMap;
     private final LoginService loginService;
+    private final ByteBufUtil byteBufUtil;
     private final AuthService authService;
     private final GameServer gameServer;
-    private final Map<Channel, String> accountMap;
-    private final Map<Channel, Integer> cookieMap;
 
     private boolean isValidListWorldFlag(CAListWorld listWorld) {
         return listWorld.getFlag() == 0;   // TODO check
@@ -46,7 +47,7 @@ public class WorldServiceImpl implements WorldService {
         acWorldList.setServerDtoList(gameServer.getServerList());
         acWorldList.setCount(acWorldList.getServerDtoList().size());
         LoginAccountDto loginAccountDto = new LoginAccountDto();
-        loginAccountDto.setName(accountMap.get(channel));
+        loginAccountDto.setName(accountMap.get(channel).getName());
         acWorldList.setCharacterDtoList(gameServer.getCharacterList(loginAccountDto));
         acWorldList.setChCount(acWorldList.getCharacterDtoList().size());
         channel.writeAndFlush(acWorldList.build(byteBufUtil));
@@ -68,7 +69,7 @@ public class WorldServiceImpl implements WorldService {
             int worldId = packet.getWid();
             if (gameServer.hasQueue(worldId)) {
                 LoginAccountDto loginAccountDto = new LoginAccountDto();
-                loginAccountDto.setName(accountMap.get(channel));
+                loginAccountDto.setName(accountMap.get(channel).getName());
                 QueueStatusDto queueStatusDto = gameServer.getQueueStatus(worldId, loginAccountDto);
                 ACWorldQueue acWorldQueue = new ACWorldQueue();
                 acWorldQueue.setWid(worldId);

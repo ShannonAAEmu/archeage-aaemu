@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 login:
   port: 1237
   threads: 10
@@ -14,4 +14,4 @@ logger:
   level: INFO
 clients:
   game:
-    url: http://localhost:8081/server
+    url: http://localhost:8083/server

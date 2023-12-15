@@ -1,18 +1,23 @@
 package com.aaemu.login.util;
 
-import com.aaemu.login.service.dto.packet.ServerPacket;
+import com.aaemu.login.service.enums.ServerPacket;
+import com.aaemu.login.service.exception.PacketException;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 public class ByteBufUtil {
-    private static final String APPEND_CHAR = "0";
-    public final boolean isLittleEndianByteOrder;
     public final Charset charset;
+
+    private String appendZero(String string) {
+        if (string.length() == 1) {
+            return "0".concat(string);
+        }
+        return string;
+    }
 
     private String hexToAscii(String hexStr) {
         StringBuilder output = new StringBuilder();
@@ -24,52 +29,67 @@ public class ByteBufUtil {
     }
 
     private String getHexOpcode(String opcode) {
-        String appendString = 4 - (4 - opcode.length()) == 1 ? "0" : "";
-        String repeatString = APPEND_CHAR.repeat(4 - appendString.length() - opcode.length());
         String opcodeHex;
-        if (isLittleEndianByteOrder) {
-            opcodeHex = String.format("%s%s%s", appendString, opcode, repeatString);
+        if (opcode.length() == 1) {
+            opcodeHex = String.format("0%s00", opcode);
+        } else if (opcode.length() == 2) {
+            opcodeHex = String.format("%s00", opcode);
+        } else if (opcode.length() == 3) {
+            String partOne = opcode.substring(0, 1);
+            String partTwo = opcode.substring(1);
+            opcodeHex = String.format("%s0%s", partTwo, partOne);
+        } else if (opcode.length() == 4) {
+            String partOne = opcode.substring(0, 2);
+            String partTwo = opcode.substring(2);
+            opcodeHex = String.format("%s%s", partTwo, partOne);
         } else {
-            opcodeHex = String.format("%s%s%s", repeatString, appendString, opcode);
+            throw new PacketException("Empty opcode");
         }
         return hexToAscii(opcodeHex);
     }
 
     public int readB(ByteBuf byteBuf) {
-        return isLittleEndianByteOrder ? byteBuf.readUnsignedByte() : byteBuf.readByte();
+        return byteBuf.readUnsignedByte();
     }
 
     public int readW(ByteBuf byteBuf) {
-        return isLittleEndianByteOrder ? byteBuf.readUnsignedShortLE() : byteBuf.readUnsignedShort();
+        return byteBuf.readUnsignedShortLE();
     }
 
     public long readD(ByteBuf byteBuf) {
-        return isLittleEndianByteOrder ? byteBuf.readUnsignedIntLE() : byteBuf.readUnsignedInt();
+        return byteBuf.readUnsignedIntLE();
     }
 
     public long readQ(ByteBuf byteBuf) {
-        return isLittleEndianByteOrder ? byteBuf.readLongLE() : byteBuf.readLong();
+        return byteBuf.readLongLE();
+    }
+
+    public String readS(ByteBuf byteBuf) {
+        return byteBuf.readCharSequence(readW(byteBuf), charset).toString();
+    }
+
+    public String readS(int length, ByteBuf byteBuf) {
+        return byteBuf.readCharSequence(length, charset).toString();
     }
 
     public boolean readBoolean(ByteBuf byteBuf) {
         return byteBuf.readBoolean();
     }
 
-    public String readString(ByteBuf byteBuf) {
-        return byteBuf.readCharSequence(readW(byteBuf), charset).toString();
-    }
-
-    public String readString(int length, ByteBuf byteBuf) {
-        return byteBuf.readCharSequence(length, charset).toString();
-    }
-
     public String readOpcode(ByteBuf byteBuf) {
         ByteBuf opcodeBytes = byteBuf.readBytes(2);
-        StringBuilder hexOpcode = new StringBuilder();
-        for (int i = 0; i < opcodeBytes.readableBytes(); i++) {
-            hexOpcode.append(StringUtil.byteToHexString(opcodeBytes.readByte()).toUpperCase());
+        String firstOpcodeByte = StringUtil.byteToHexString(opcodeBytes.readByte()).toUpperCase();
+        String secondOpcodeByte = StringUtil.byteToHexString(opcodeBytes.readByte()).toUpperCase();
+        if (secondOpcodeByte.equals("0")) {
+            if (firstOpcodeByte.endsWith("0")) {
+                return String.valueOf(firstOpcodeByte.charAt(0));
+            }
+            return firstOpcodeByte;
         }
-        return hexOpcode.toString();
+        if (firstOpcodeByte.endsWith("0")) {
+            return secondOpcodeByte + appendZero(String.valueOf(firstOpcodeByte.charAt(0)));
+        }
+        return secondOpcodeByte + appendZero(firstOpcodeByte);
     }
 
     public void writeB(byte value, ByteBuf byteBuf) {
@@ -78,10 +98,6 @@ public class ByteBufUtil {
 
     public void writeW(int value, ByteBuf byteBuf) {
         byteBuf.writeShortLE(value);
-    }
-
-    public void writeOpcode(ServerPacket packet, ByteBuf byteBuf) {
-        byteBuf.writeCharSequence(getHexOpcode(packet.getOpcode()), StandardCharsets.US_ASCII);
     }
 
     public void writeD(int value, ByteBuf byteBuf) {
@@ -103,5 +119,9 @@ public class ByteBufUtil {
 
     public void writeBoolean(boolean value, ByteBuf byteBuf) {
         byteBuf.writeBoolean(value);
+    }
+
+    public void writeOpcode(ServerPacket packet, ByteBuf byteBuf) {
+        byteBuf.writeCharSequence(getHexOpcode(packet.getOpcode()), charset);
     }
 }

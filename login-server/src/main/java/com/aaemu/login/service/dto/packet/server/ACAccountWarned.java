@@ -1,16 +1,13 @@
 package com.aaemu.login.service.dto.packet.server;
 
-import com.aaemu.login.service.dto.packet.Packet;
-import com.aaemu.login.service.dto.packet.ServerPacket;
+import com.aaemu.login.service.enums.ServerPacket;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ACAccountWarned extends Packet {
+public class ACAccountWarned {
 
     /**
      * 0 = "login_unknown"

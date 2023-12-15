@@ -1,5 +1,6 @@
 package com.aaemu.login;
 
+import com.aaemu.login.service.model.Account;
 import com.aaemu.login.service.model.TempPassword;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.channel.Channel;
@@ -25,11 +26,11 @@ public class LoginServerConfig {
 
     @Bean
     public ByteBufUtil byteBufUtil() {
-        return new ByteBufUtil(true, StandardCharsets.US_ASCII);
+        return new ByteBufUtil(StandardCharsets.US_ASCII);
     }
 
     @Bean
-    public Map<Channel, String> accountMap() {
+    public Map<Channel, Account> accountMap() {
         return new HashMap<>();
     }
 

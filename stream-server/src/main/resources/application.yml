@@ -8,4 +8,4 @@ logger:
   level: INFO
 clients:
   game:
-    url: http://localhost:8081/server
+    url: http://localhost:8083/server

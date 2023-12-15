@@ -1,18 +1,16 @@
 package com.aaemu.game.service.dto.packet.server;
 
-import com.aaemu.game.service.dto.packet.Packet;
-import com.aaemu.game.service.dto.packet.ServerPacket;
+import com.aaemu.game.service.enums.ServerPacket;
+import com.aaemu.game.service.model.Character;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SCCharacterList extends Packet {
+public class SCCharacterList {
     private byte last;
     private byte count;
     private List<Character> characterList;

@@ -24,10 +24,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class ChallengeServiceImpl implements ChallengeService {
-    private final ByteBufUtil byteBufUtil;
-    private final LoginService loginService;
-    private final Map<Channel, TempPassword> otpMap;
     private final Map<Channel, TempPassword> pcCertMap;
+    private final Map<Channel, TempPassword> otpMap;
+    private final LoginService loginService;
+    private final ByteBufUtil byteBufUtil;
 
     @Value("${auth.otp}")
     private boolean useOtp;

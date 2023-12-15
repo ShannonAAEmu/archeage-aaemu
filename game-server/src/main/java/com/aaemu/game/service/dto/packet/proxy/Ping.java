@@ -1,14 +1,12 @@
 package com.aaemu.game.service.dto.packet.proxy;
 
-import com.aaemu.game.service.dto.packet.Packet;
+import com.aaemu.game.service.dto.packet.ClientPacket;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Ping extends Packet {
+public class Ping implements ClientPacket {
     private final long tm;
     private final long when;
     private final int local;

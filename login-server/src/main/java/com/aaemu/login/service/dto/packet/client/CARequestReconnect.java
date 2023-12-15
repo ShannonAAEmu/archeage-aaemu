@@ -1,14 +1,12 @@
 package com.aaemu.login.service.dto.packet.client;
 
-import com.aaemu.login.service.dto.packet.Packet;
+import com.aaemu.login.service.dto.packet.ClientPacket;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class CARequestReconnect extends Packet {
+public class CARequestReconnect implements ClientPacket {
     private final long p_from;
     private final long p_to;
     private final long aid; // Account id
@@ -22,6 +20,6 @@ public class CARequestReconnect extends Packet {
         this.aid = byteBufUtil.readD(byteBuf);
         this.wid = byteBufUtil.readB(byteBuf);
         this.cookie = byteBufUtil.readD(byteBuf);
-        this.mac = byteBufUtil.readString(byteBuf);
+        this.mac = byteBufUtil.readS(byteBuf);
     }
 }

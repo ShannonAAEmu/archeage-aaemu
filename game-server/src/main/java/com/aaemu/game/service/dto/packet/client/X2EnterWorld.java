@@ -1,15 +1,13 @@
 package com.aaemu.game.service.dto.packet.client;
 
-import com.aaemu.game.service.dto.packet.Packet;
+import com.aaemu.game.service.dto.packet.ClientPacket;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class X2EnterWorld extends Packet {
+public class X2EnterWorld implements ClientPacket {
     private final long p_from;
     private final long p_to;
     private final long accountId;

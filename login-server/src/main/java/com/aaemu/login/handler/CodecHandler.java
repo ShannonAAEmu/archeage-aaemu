@@ -1,7 +1,7 @@
 package com.aaemu.login.handler;
 
-import com.aaemu.login.service.dto.packet.ClientPacket;
-import com.aaemu.login.service.dto.packet.ServerPacket;
+import com.aaemu.login.service.enums.ClientPacket;
+import com.aaemu.login.service.enums.ServerPacket;
 import com.aaemu.login.service.dto.packet.client.CACancelEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse;
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse2;

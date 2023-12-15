@@ -1,6 +1,7 @@
 package com.aaemu.game;
 
 
+import com.aaemu.game.service.model.Account;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import org.springframework.context.annotation.Bean;
@@ -15,11 +16,11 @@ public class GameServerConfig {
 
     @Bean
     public ByteBufUtil byteBufUtil() {
-        return new ByteBufUtil(true, StandardCharsets.US_ASCII);
+        return new ByteBufUtil(StandardCharsets.US_ASCII);
     }
 
     @Bean
-    public Map<Channel, Long> accountMap() {
+    public Map<Channel, Account> accountMap() {
         return new HashMap<>();
     }
 
