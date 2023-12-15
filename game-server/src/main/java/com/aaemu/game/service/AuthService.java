@@ -7,11 +7,11 @@ import io.netty.channel.Channel;
 
 public interface AuthService {
 
-    void enterWorld(X2EnterWorld packet, Channel channel);
+    void firstStepEnterWorld(X2EnterWorld packet, Channel channel);
 
-    void enterWorld(FinishState packet, Channel channel);
+    void secondStepEnterWorld(FinishState packet, Channel channel);
 
     void changeState(long accountId);
 
-    void sendListCharacter(CSListCharacter packet, Channel channel);
+    void sendCharacterList(CSListCharacter packet, Channel channel);
 }

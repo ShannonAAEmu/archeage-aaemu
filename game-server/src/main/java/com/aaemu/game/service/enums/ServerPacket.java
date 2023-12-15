@@ -1,4 +1,4 @@
-package com.aaemu.game.service.dto.packet;
+package com.aaemu.game.service.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,9 @@ public enum ServerPacket {
     X2_ENTER_WORLD_RESPONSE("0"),
     SC_INITIAL_CONFIG("5"),
     SC_CHAT_SPAM_DELAY("B0"),
+    SC_ACCOUNT_WARNED("178"),
     SC_ACCOUNT_INFO("198"),
+    SC_REFRESH_IN_CHARACTER_LIST("1A2"),
     SC_CHARACTER_LIST("2D");
 
     private final String opcode;

@@ -1,7 +1,6 @@
 package com.aaemu.game.service.impl;
 
 import com.aaemu.game.service.AuthService;
-import com.aaemu.game.service.dto.packet.StateLevel;
 import com.aaemu.game.service.dto.packet.client.CSListCharacter;
 import com.aaemu.game.service.dto.packet.client.X2EnterWorld;
 import com.aaemu.game.service.dto.packet.proxy.ChangeState;
@@ -12,6 +11,8 @@ import com.aaemu.game.service.dto.packet.server.SCCharacterList;
 import com.aaemu.game.service.dto.packet.server.SCChatSpamDelay;
 import com.aaemu.game.service.dto.packet.server.SCInitialConfig;
 import com.aaemu.game.service.dto.packet.server.X2EnterWorldResponse;
+import com.aaemu.game.service.enums.StateLevel;
+import com.aaemu.game.service.model.Account;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final Map<Channel, Long> accountMap;
+    private final Map<Channel, Account> accountMap;
     private final ByteBufUtil byteBufUtil;
 
     public void sendChangeState(int state, Channel channel) {
@@ -68,8 +69,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void enterWorld(X2EnterWorld packet, Channel channel) {
-        accountMap.replace(channel, packet.getAccountId());
+    public void firstStepEnterWorld(X2EnterWorld packet, Channel channel) {
+        accountMap.replace(channel, new Account(packet.getAccountId()));
         int cookie = new Random().nextInt(65535);
         X2EnterWorldResponse x2EnterWorldResponse = new X2EnterWorldResponse();
         x2EnterWorldResponse.setReason(0);
@@ -82,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void enterWorld(FinishState packet, Channel channel) {
+    public void secondStepEnterWorld(FinishState packet, Channel channel) {
         if (packet.getState() == StateLevel.ZERO.getState()) {
             sendChangeState(1, channel);
             sendGameType(channel);
@@ -94,18 +95,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void changeState(long accountId) {
-        if (accountMap.containsValue(accountId)) {
-            for (Map.Entry<Channel, Long> entry : accountMap.entrySet()) {
-                if (entry.getValue() == accountId) {
-                    sendChangeState(2, entry.getKey());
-                    break;
-                }
+        for (Map.Entry<Channel, Account> entry : accountMap.entrySet()) {
+            if (entry.getValue().getId() == accountId) {
+                sendChangeState(2, entry.getKey());
+                break;
             }
         }
     }
 
     @Override
-    public void sendListCharacter(CSListCharacter packet, Channel channel) {
+    public void sendCharacterList(CSListCharacter packet, Channel channel) {
         SCCharacterList characterList = new SCCharacterList();
         characterList.setLast(1);
         characterList.setCount(0);

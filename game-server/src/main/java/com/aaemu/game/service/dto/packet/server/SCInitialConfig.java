@@ -1,16 +1,13 @@
 package com.aaemu.game.service.dto.packet.server;
 
-import com.aaemu.game.service.dto.packet.Packet;
-import com.aaemu.game.service.dto.packet.ServerPacket;
+import com.aaemu.game.service.enums.ServerPacket;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SCInitialConfig extends Packet {
+public class SCInitialConfig {
     private String host;
     private String fSet;
     private int count;

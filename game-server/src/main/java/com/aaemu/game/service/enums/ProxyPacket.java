@@ -1,4 +1,4 @@
-package com.aaemu.game.service.dto.packet;
+package com.aaemu.game.service.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

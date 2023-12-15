@@ -1,10 +1,11 @@
 package com.aaemu.game;
 
 
-import com.aaemu.game.handler.ExceptionHandler;
 import com.aaemu.game.handler.CodecHandler;
+import com.aaemu.game.handler.ExceptionHandler;
 import com.aaemu.game.handler.LogHandler;
 import com.aaemu.game.handler.ProcessingHandler;
+import com.aaemu.game.service.model.Account;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -13,6 +14,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
@@ -40,7 +42,7 @@ import java.util.Map;
 @Slf4j
 public class GameServer {
     private final ProcessingHandler processingHandler;
-    private final Map<Channel, Long> accountMap;
+    private final Map<Channel, Account> accountMap;
     private final ByteBufUtil byteBufUtil;
 
     @Value("${game.threads}")
@@ -96,6 +98,7 @@ public class GameServer {
 
                             @Override
                             public void initChannel(@NonNull SocketChannel channel) {
+                                channel.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(2048));
                                 channel.pipeline().addLast("exception", new ExceptionHandler(accountMap));
                                 if (isActiveLog) {
                                     channel.pipeline().addLast("logger", new LogHandler(byteBufUtil, LogLevel.valueOf(logLevel)));

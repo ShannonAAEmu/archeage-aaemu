@@ -1,16 +1,13 @@
 package com.aaemu.game.service.dto.packet.proxy;
 
-import com.aaemu.game.service.dto.packet.Packet;
-import com.aaemu.game.service.dto.packet.ProxyPacket;
+import com.aaemu.game.service.enums.ProxyPacket;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Pong extends Packet {
+public class Pong {
     private long tm;
     private long when;
     private long elapsed;

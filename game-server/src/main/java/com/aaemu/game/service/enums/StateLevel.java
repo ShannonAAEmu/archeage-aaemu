@@ -1,4 +1,4 @@
-package com.aaemu.game.service.dto.packet;
+package com.aaemu.game.service.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum StateLevel {
     ZERO(0),
     FIRST(1),
-    SECOND(1);
+    SECOND(2);
 
     private final int state;
 }
