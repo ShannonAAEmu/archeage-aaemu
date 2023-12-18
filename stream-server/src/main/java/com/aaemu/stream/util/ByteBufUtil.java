@@ -61,13 +61,7 @@ public class ByteBufUtil {
         String firstOpcodeByte = StringUtil.byteToHexString(opcodeBytes.readByte()).toUpperCase();
         String secondOpcodeByte = StringUtil.byteToHexString(opcodeBytes.readByte()).toUpperCase();
         if (secondOpcodeByte.equals("0")) {
-            if (firstOpcodeByte.endsWith("0")) {
-                return String.valueOf(firstOpcodeByte.charAt(0));
-            }
             return firstOpcodeByte;
-        }
-        if (firstOpcodeByte.endsWith("0")) {
-            return secondOpcodeByte + appendZero(String.valueOf(firstOpcodeByte.charAt(0)));
         }
         return secondOpcodeByte + appendZero(firstOpcodeByte);
     }
