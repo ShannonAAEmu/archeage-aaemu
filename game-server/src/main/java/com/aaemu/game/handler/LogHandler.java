@@ -27,6 +27,32 @@ public class LogHandler extends LoggingHandler {
         return packet.getOpcode().equals(ProxyPacket.PING.getOpcode()) || packet.getOpcode().equals(ProxyPacket.PONG.getOpcode());
     }
 
+    public void recursiveLog(ChannelHandlerContext ctx, Object msg) {
+        try {
+            if (msg instanceof ByteBuf byteBuf) {
+                byteBuf.readerIndex(byteBuf.readerIndex() + 3);
+                byte level = byteBuf.readByte();
+                if (level == PacketLevel.SECOND.getLevel()) {
+                    ProxyPacket packet = ProxyPacket.getByOpcode(byteBufUtil.readOpcode(byteBuf));
+                    byteBuf.readerIndex(byteBuf.readerIndex() - 6);
+                    if (isPingPongPacket(packet)) {
+                        return;
+                    }
+                } else {
+                    byteBuf.readerIndex(byteBuf.readerIndex() - 4);
+                }
+                StringBuilder stringBuilder = new StringBuilder();
+                System.out.println();
+                System.out.println(">===========================================================================<");
+                appendPrettyHexDump(stringBuilder, byteBuf);
+                System.out.println(stringBuilder);
+            }
+        } catch (Exception e) {
+            log.error("Disconnect client.", e);
+            ctx.close();
+        }
+    }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {

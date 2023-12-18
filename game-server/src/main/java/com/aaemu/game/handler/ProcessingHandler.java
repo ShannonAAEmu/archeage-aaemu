@@ -50,7 +50,7 @@ public class ProcessingHandler extends SimpleChannelInboundHandler<ClientPacket>
             case X2EnterWorld packet -> authService.firstStepEnterWorld(packet, ctx.channel());
             case FinishState packet -> authService.secondStepEnterWorld(packet, ctx.channel());
             case CSListCharacter packet -> authService.sendCharacterList(packet, ctx.channel());
-            case CSRefreshInCharacterList packet -> pingPongService.refreshCharacterList(packet, ctx.channel());
+            case CSRefreshInCharacterList packet -> gameService.refreshCharacterList(packet, ctx.channel());
             case CSBroadcastVisualOption packet -> gameService.setBroadcastVisualOption(packet, ctx.channel());
             case CSCreateCharacter packet -> gameService.createCharacter(packet, ctx.channel());
             default -> throw new PacketException(String.format("Unknown packet for processing: %s", clientPacket));

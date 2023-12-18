@@ -26,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
     private final ByteBufUtil byteBufUtil;
+    private final LogHandler logHandler;
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) {
@@ -60,8 +61,7 @@ public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
             System.out.printf("Received game packet: %s [opcode: %s, length: %d, level: %d]%s", packet.name(), packet.getOpcode(), length, level, System.lineSeparator());
             buildGamePacket(packet, out, msg);
             if (msg.readableBytes() != 0) {
-                log.warn("Not all bytes were read from the client game packet: {} [opcode: {}, size: {}, level: {}]", packet.name(), packet.getOpcode(), msg.readableBytes(), level);
-                log.warn("Recursive decode...");
+                logHandler.recursiveLog(ctx, msg);
                 decode(ctx, msg, out);
             }
         } else if (level == PacketLevel.SECOND.getLevel()) {
@@ -71,8 +71,7 @@ public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
             }
             buildProxyPacket(packet, out, msg);
             if (msg.readableBytes() != 0) {
-                log.warn("Not all bytes were read from the client proxy packet: {} [opcode: {}, size: {}, level: {}]", packet.name(), packet.getOpcode(), msg.readableBytes(), level);
-                log.warn("Recursive decode...");
+                logHandler.recursiveLog(ctx, msg);
                 decode(ctx, msg, out);
             }
         } else {

@@ -3,7 +3,7 @@ server:
 game:
   id: 1
   port: 1239
-  threads: 10
+  threads: 100
 logger:
   active: true
   level: INFO
