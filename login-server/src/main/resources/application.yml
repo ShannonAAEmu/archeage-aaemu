@@ -1,9 +1,18 @@
 server:
   port: 8081
+spring:
+  datasource:
+    username: ${LOGIN_SERVER_DB_NAME}
+    password: ${LOGIN_SERVER_DB_PASSWORD}
+    driver-class-name: ${LOGIN_SERVER_DB_DRIVER}
+    url: ${LOGIN_SERVER_DB_URL}
+    hikari:
+      maximum-pool-size: 10
 login:
   port: 1237
   threads: 10
 auth:
+  auto_registration: true
   otp: false
   otp_max_try: 3
   ars: false          # Not released by XLGames in leaked client
