@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  login-server-db:
+    image: postgres:16-alpine
+    ports:
+      - "7000:5432"
+    environment:
+      - POSTGRES_PASSWORD=${LOGIN_SERVER_DB_PASSWORD}
+      - POSTGRES_DB=${LOGIN_SERVER_DB_NAME}
+    volumes:
+      - login-server-db:/var/lib/postgresql/data
+    restart: always
+volumes:
+  login-server-db:
