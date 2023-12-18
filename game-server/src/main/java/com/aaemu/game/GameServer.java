@@ -86,6 +86,7 @@ public class GameServer {
             }
             EventExecutorGroup eventExecutor = new DefaultEventExecutorGroup(eventExecutorGroupThreads);
             try {
+                LogHandler logHandler = new LogHandler(byteBufUtil, LogLevel.valueOf(logLevel));
                 ServerBootstrap bootstrap = new ServerBootstrap();
                 bootstrap
                         .group(parentEventGroup, childEventGroup)
@@ -101,9 +102,9 @@ public class GameServer {
                                 channel.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(2048));
                                 channel.pipeline().addLast("exception", new ExceptionHandler(accountMap));
                                 if (isActiveLog) {
-                                    channel.pipeline().addLast("logger", new LogHandler(byteBufUtil, LogLevel.valueOf(logLevel)));
+                                    channel.pipeline().addLast("logger", logHandler);
                                 }
-                                channel.pipeline().addLast("codec", new CodecHandler(byteBufUtil));
+                                channel.pipeline().addLast("codec", new CodecHandler(byteBufUtil, logHandler));
                                 channel.pipeline().addLast(eventExecutor, processingHandler);
                             }
                         });

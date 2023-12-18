@@ -18,6 +18,7 @@ import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -89,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
             sendGameType(channel);
             sendInitialConfig(channel);
             sendAccountInfo(channel);
-//            sendChatSpamDelay(channel);
+            sendChatSpamDelay(channel);
         }
     }
 
@@ -106,9 +107,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void sendCharacterList(CSListCharacter packet, Channel channel) {
         SCCharacterList characterList = new SCCharacterList();
-        characterList.setLast(1);
-        characterList.setCount(0);
-//        characterList.setCharacterList(null);
+        characterList.setCharacterList(new ArrayList<>());
         channel.writeAndFlush(characterList.build(byteBufUtil));
     }
 }

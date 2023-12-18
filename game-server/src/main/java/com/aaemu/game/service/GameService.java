@@ -11,5 +11,7 @@ public interface GameService {
 
     void createCharacter(CSCreateCharacter packet, Channel channel);
 
+    void refreshCharacterList(CSRefreshInCharacterList packet, Channel channel);
+
     void sendAccountWarned(Channel channel);
 }
