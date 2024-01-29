@@ -1,6 +1,6 @@
 package com.aaemu.stream.handler;
 
-import com.aaemu.stream.service.model.Account;
+import com.aaemu.stream.service.model.StreamAccount;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
@@ -15,7 +15,7 @@ import java.util.Map;
 @ChannelHandler.Sharable
 @Slf4j
 public class ExceptionHandler extends ChannelDuplexHandler {
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, StreamAccount> accountMap;
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

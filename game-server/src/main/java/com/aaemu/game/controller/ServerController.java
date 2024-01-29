@@ -7,7 +7,7 @@ import com.aaemu.game.service.dto.client.CharacterDto;
 import com.aaemu.game.service.dto.client.LoginAccountDto;
 import com.aaemu.game.service.dto.client.QueueStatusDto;
 import com.aaemu.game.service.dto.client.ServerDto;
-import com.aaemu.game.service.dto.client.StreamCharacterDto;
+import com.aaemu.game.service.dto.client.StreamAccountDto;
 import com.aaemu.game.service.exception.GameServerException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +41,15 @@ public class ServerController {
     private int serverId;
 
     @GetMapping(value = "/address", produces = MediaType.APPLICATION_JSON_VALUE)
-    public AddressDto getIp() throws UnknownHostException {
-        AddressDto addressDto = new AddressDto();
-        addressDto.setIp(InetAddress.getLocalHost().getHostAddress());
-        addressDto.setPort(gamePort);
-        return addressDto;
+    public AddressDto getIp() {
+        try {
+            AddressDto addressDto = new AddressDto();
+            addressDto.setIp(InetAddress.getLocalHost().getHostAddress());
+            addressDto.setPort(gamePort);
+            return addressDto;
+        } catch (UnknownHostException e) {
+            throw new GameServerException(e);
+        }
     }
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +61,7 @@ public class ServerController {
 
     @PostMapping(value = "/account/characters", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CharacterDto> characters(@RequestBody LoginAccountDto loginAccountDto) {
-        log.info("Request characters list from account: {}", loginAccountDto.getName());
+        log.info("Request characters list from account id: {}", loginAccountDto.getId());
         // TODO character logic
         return new ArrayList<>();
     }
@@ -74,7 +78,7 @@ public class ServerController {
     @PostMapping(value = "/{id}/status", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public QueueStatusDto getQueueStatus(@PathVariable int id, @RequestBody LoginAccountDto loginAccountDto) {
         if (serverId == id) {
-            log.info("Request queue status account: {}", loginAccountDto.getName());
+            log.info("Request queue status from account id: {}", loginAccountDto.getId());
             // TODO queue logic
             QueueStatusDto queueStatusDto = new QueueStatusDto();
             queueStatusDto.setTurnCount(2);
@@ -85,8 +89,8 @@ public class ServerController {
     }
 
     @PostMapping(value = "/stream/join", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> getStreamJoin(@RequestBody StreamCharacterDto characterDto) {
-        authService.changeState(characterDto.getAccountId());
+    public ResponseEntity<Void> getStreamJoin(@RequestBody StreamAccountDto streamAccountDto) {
+        authService.changeState(streamAccountDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

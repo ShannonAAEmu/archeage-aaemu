@@ -5,7 +5,7 @@ import com.aaemu.game.handler.CodecHandler;
 import com.aaemu.game.handler.ExceptionHandler;
 import com.aaemu.game.handler.LogHandler;
 import com.aaemu.game.handler.ProcessingHandler;
-import com.aaemu.game.service.model.Account;
+import com.aaemu.game.service.model.GameAccount;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -42,7 +42,7 @@ import java.util.Map;
 @Slf4j
 public class GameServer {
     private final ProcessingHandler processingHandler;
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, GameAccount> accountMap;
     private final ByteBufUtil byteBufUtil;
 
     @Value("${game.threads}")

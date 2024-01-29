@@ -1,7 +1,7 @@
 package com.aaemu.stream;
 
 
-import com.aaemu.stream.service.model.Account;
+import com.aaemu.stream.service.model.StreamAccount;
 import com.aaemu.stream.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class StreamServerConfig {
     }
 
     @Bean
-    public Map<Channel, Account> accountMap() {
+    public Map<Channel, StreamAccount> accountMap() {
         return new HashMap<>();
     }
 

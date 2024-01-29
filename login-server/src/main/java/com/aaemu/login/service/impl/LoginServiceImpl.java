@@ -25,10 +25,10 @@ public class LoginServiceImpl implements LoginService {
         channel.writeAndFlush(acJoinResponse.build(byteBufUtil));
         ACAuthResponse acAuthResponse = new ACAuthResponse();
         acAuthResponse.setAccountId(1);
-        Random r = new Random();
+        Random random = new Random();
         StringBuilder sb = new StringBuilder();
         while (sb.length() < 16) {
-            sb.append(Integer.toHexString(r.nextInt()));
+            sb.append(Integer.toHexString(random.nextInt()));
         }
         acAuthResponse.setWsk(sb.toString());
         channel.writeAndFlush(acAuthResponse.build(byteBufUtil));

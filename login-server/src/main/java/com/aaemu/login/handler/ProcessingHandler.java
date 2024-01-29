@@ -2,7 +2,7 @@ package com.aaemu.login.handler;
 
 import com.aaemu.login.service.AuthService;
 import com.aaemu.login.service.ChallengeService;
-import com.aaemu.login.service.WorldService;
+import com.aaemu.login.service.GameService;
 import com.aaemu.login.service.dto.packet.ClientPacket;
 import com.aaemu.login.service.dto.packet.client.CACancelEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse;
@@ -14,7 +14,7 @@ import com.aaemu.login.service.dto.packet.client.CAPcCertNumber;
 import com.aaemu.login.service.dto.packet.client.CARequestAuth;
 import com.aaemu.login.service.dto.packet.client.CARequestReconnect;
 import com.aaemu.login.service.exception.PacketException;
-import com.aaemu.login.service.model.Account;
+import com.aaemu.login.service.model.AuthAccount;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,10 +30,10 @@ import java.util.Map;
 @ChannelHandler.Sharable
 @Slf4j
 public class ProcessingHandler extends SimpleChannelInboundHandler<ClientPacket> {
-    private final Map<Channel, Account> accountMap;
-    private final AuthService authService;
+    private final Map<Channel, AuthAccount> accountMap;
     private final ChallengeService challengeService;
-    private final WorldService worldService;
+    private final GameService gameService;
+    private final AuthService authService;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -55,10 +55,10 @@ public class ProcessingHandler extends SimpleChannelInboundHandler<ClientPacket>
             case CAChallengeResponse2 packet -> challengeService.challenge(packet, ctx.channel());
             case CAOtpNumber packet -> challengeService.processOneTimePassword(packet, ctx.channel());
             case CAPcCertNumber packet -> challengeService.processPcCertificate(packet, ctx.channel());
-            case CAListWorld packet -> worldService.requestList(packet, ctx.channel());
-            case CAEnterWorld packet -> worldService.enterWorld(packet, ctx.channel());
-            case CACancelEnterWorld packet -> worldService.cancelEnterWorld(packet, ctx.channel());
-            case CARequestReconnect packet -> worldService.requestReconnect(packet, ctx.channel());
+            case CAListWorld packet -> gameService.requestList(packet, ctx.channel());
+            case CAEnterWorld packet -> gameService.enterWorld(packet, ctx.channel());
+            case CACancelEnterWorld packet -> gameService.cancelEnterWorld(packet, ctx.channel());
+            case CARequestReconnect packet -> authService.requestReconnect(packet, ctx.channel());
             default -> throw new PacketException(String.format("Unknown packet for processing: %s", clientPacket));
         }
     }

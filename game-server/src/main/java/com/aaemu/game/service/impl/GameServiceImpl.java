@@ -6,7 +6,7 @@ import com.aaemu.game.service.dto.packet.client.CSCreateCharacter;
 import com.aaemu.game.service.dto.packet.client.CSRefreshInCharacterList;
 import com.aaemu.game.service.dto.packet.server.SCAccountWarned;
 import com.aaemu.game.service.dto.packet.server.SCRefreshInCharacterList;
-import com.aaemu.game.service.model.Account;
+import com.aaemu.game.service.model.GameAccount;
 import com.aaemu.game.service.model.BroadcastVisualOption;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.channel.Channel;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class GameServiceImpl implements GameService {
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, GameAccount> accountMap;
     private final ByteBufUtil byteBufUtil;
 
     @Override

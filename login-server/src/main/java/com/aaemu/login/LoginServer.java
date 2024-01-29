@@ -3,7 +3,7 @@ package com.aaemu.login;
 import com.aaemu.login.handler.CodecHandler;
 import com.aaemu.login.handler.ExceptionHandler;
 import com.aaemu.login.handler.ProcessingHandler;
-import com.aaemu.login.service.model.Account;
+import com.aaemu.login.service.model.AuthAccount;
 import com.aaemu.login.util.ByteBufUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -40,7 +40,7 @@ import java.util.Map;
 @Slf4j
 public class LoginServer {
     private final ProcessingHandler processingHandler;
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, AuthAccount> accountMap;
     private final ByteBufUtil byteBufUtil;
 
     @Value("${login.threads}")

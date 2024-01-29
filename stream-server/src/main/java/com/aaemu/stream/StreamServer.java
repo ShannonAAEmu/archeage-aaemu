@@ -3,7 +3,7 @@ package com.aaemu.stream;
 import com.aaemu.stream.handler.CodecHandler;
 import com.aaemu.stream.handler.ExceptionHandler;
 import com.aaemu.stream.handler.ProcessingHandler;
-import com.aaemu.stream.service.model.Account;
+import com.aaemu.stream.service.model.StreamAccount;
 import com.aaemu.stream.util.ByteBufUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -40,7 +40,7 @@ import java.util.Map;
 @Slf4j
 public class StreamServer {
     private final ProcessingHandler processingHandler;
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, StreamAccount> accountMap;
     private final ByteBufUtil byteBufUtil;
 
     @Value("${stream.threads}")

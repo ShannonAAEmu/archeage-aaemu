@@ -1,6 +1,9 @@
 package com.aaemu.game.service.impl;
 
+import com.aaemu.game.client.StreamServer;
 import com.aaemu.game.service.AuthService;
+import com.aaemu.game.service.dto.client.AddressDto;
+import com.aaemu.game.service.dto.client.StreamAccountDto;
 import com.aaemu.game.service.dto.packet.client.CSListCharacter;
 import com.aaemu.game.service.dto.packet.client.X2EnterWorld;
 import com.aaemu.game.service.dto.packet.proxy.ChangeState;
@@ -12,12 +15,15 @@ import com.aaemu.game.service.dto.packet.server.SCChatSpamDelay;
 import com.aaemu.game.service.dto.packet.server.SCInitialConfig;
 import com.aaemu.game.service.dto.packet.server.X2EnterWorldResponse;
 import com.aaemu.game.service.enums.StateLevel;
-import com.aaemu.game.service.model.Account;
+import com.aaemu.game.service.exception.GameServerException;
+import com.aaemu.game.service.model.GameAccount;
 import com.aaemu.game.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
@@ -25,7 +31,8 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, GameAccount> accountMap;
+    private final StreamServer streamServer;
     private final ByteBufUtil byteBufUtil;
 
     public void sendChangeState(int state, Channel channel) {
@@ -43,14 +50,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void sendInitialConfig(Channel channel) {
-        SCInitialConfig initialConfig = new SCInitialConfig();
-        initialConfig.setHost("127.0.0.1:8080");
-        initialConfig.setFSet("\u00117");
-        initialConfig.setCount(0);
-        initialConfig.setSearchLevel(0);
-        initialConfig.setBidLevel(0);
-        initialConfig.setPostLevel(0);
-        channel.writeAndFlush(initialConfig.build(byteBufUtil));
+        try {
+            SCInitialConfig initialConfig = new SCInitialConfig();
+            initialConfig.setHost(InetAddress.getLocalHost().getHostAddress().concat(":8080"));
+            initialConfig.setFSet("\u00117");
+            initialConfig.setCount(0);
+            initialConfig.setSearchLevel(0);
+            initialConfig.setBidLevel(0);
+            initialConfig.setPostLevel(0);
+            channel.writeAndFlush(initialConfig.build(byteBufUtil));
+        } catch (UnknownHostException e) {
+            throw new GameServerException(e);
+        }
     }
 
     private void sendAccountInfo(Channel channel) {
@@ -71,13 +82,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void firstStepEnterWorld(X2EnterWorld packet, Channel channel) {
-        accountMap.replace(channel, new Account(packet.getAccountId()));
-        int cookie = new Random().nextInt(65535);
+        AddressDto streamAddress = streamServer.getStreamAddress();
+        accountMap.replace(channel, new GameAccount(packet.getAccountId()));
         X2EnterWorldResponse x2EnterWorldResponse = new X2EnterWorldResponse();
         x2EnterWorldResponse.setReason(0);
         x2EnterWorldResponse.setGm(0);
-        x2EnterWorldResponse.setSc(cookie);
-        x2EnterWorldResponse.setSp(1250);
+        x2EnterWorldResponse.setSc(new Random().nextInt(65535));
+        x2EnterWorldResponse.setSp(streamAddress.getPort());
         x2EnterWorldResponse.setWf(System.currentTimeMillis());
         channel.writeAndFlush(x2EnterWorldResponse.build(byteBufUtil));
         sendChangeState(0, channel);
@@ -95,9 +106,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void changeState(long accountId) {
-        for (Map.Entry<Channel, Account> entry : accountMap.entrySet()) {
-            if (entry.getValue().getId() == accountId) {
+    public void changeState(StreamAccountDto streamAccountDto) {
+        for (Map.Entry<Channel, GameAccount> entry : accountMap.entrySet()) {
+            if (entry.getValue().getId().equals(streamAccountDto.getId())) {
+                entry.getValue().setStreamCookie(streamAccountDto.getCookie());
                 sendChangeState(2, entry.getKey());
                 break;
             }

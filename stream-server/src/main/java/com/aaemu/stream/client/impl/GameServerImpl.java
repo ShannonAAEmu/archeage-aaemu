@@ -1,7 +1,7 @@
 package com.aaemu.stream.client.impl;
 
 import com.aaemu.stream.client.GameServer;
-import com.aaemu.stream.service.dto.client.CharacterDto;
+import com.aaemu.stream.service.dto.client.StreamAccountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ public class GameServerImpl implements GameServer {
     private String gameServerUrl;
 
     @Override
-    public void sendAuth(CharacterDto characterDto) {
+    public void sendAuth(StreamAccountDto streamAccountDto) {
         restClient.post()
                 .uri(String.format("%s/%s/%s", gameServerUrl, "stream", "join"))
-                .body(characterDto)
+                .body(streamAccountDto)
                 .retrieve()
                 .toBodilessEntity();
     }

@@ -7,3 +7,6 @@ game:
 logger:
   active: true
   level: INFO
+clients:
+  stream:
+    url: http://localhost:8082/server

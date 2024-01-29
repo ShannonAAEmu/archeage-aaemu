@@ -3,7 +3,7 @@ package com.aaemu.login.client.impl;
 import com.aaemu.login.client.GameServer;
 import com.aaemu.login.service.dto.client.AddressDto;
 import com.aaemu.login.service.dto.client.CharacterDto;
-import com.aaemu.login.service.dto.client.LoginAccountDto;
+import com.aaemu.login.service.dto.client.QueueAccountDto;
 import com.aaemu.login.service.dto.client.QueueStatusDto;
 import com.aaemu.login.service.dto.client.ServerDto;
 import com.aaemu.login.service.exception.LoginServerException;
@@ -45,10 +45,10 @@ public class GameServerImpl implements GameServer {
     }
 
     @Override
-    public List<CharacterDto> getCharacterList(LoginAccountDto loginAccountDto) {
+    public List<CharacterDto> getCharacterList(QueueAccountDto queueAccountDto) {
         return restClient.post()
                 .uri(String.format("%s/%s/%s", gameServerUrl, "account", "characters"))
-                .body(loginAccountDto)
+                .body(queueAccountDto)
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {
                 });
@@ -63,10 +63,10 @@ public class GameServerImpl implements GameServer {
     }
 
     @Override
-    public QueueStatusDto getQueueStatus(int worldId, LoginAccountDto loginAccountDto) {
+    public QueueStatusDto getQueueStatus(int worldId, QueueAccountDto queueAccountDto) {
         QueueStatusDto queueStatusDto = restClient.post()
                 .uri(String.format("%s/%d/%s", gameServerUrl, worldId, "status"))
-                .body(loginAccountDto)
+                .body(queueAccountDto)
                 .retrieve()
                 .body(QueueStatusDto.class);
         if (queueStatusDto == null) {

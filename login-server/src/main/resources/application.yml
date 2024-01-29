@@ -2,12 +2,16 @@ server:
   port: 8081
 spring:
   datasource:
-    username: ${LOGIN_SERVER_DB_NAME}
+    username: ${LOGIN_SERVER_DB_USERNAME}
     password: ${LOGIN_SERVER_DB_PASSWORD}
     driver-class-name: ${LOGIN_SERVER_DB_DRIVER}
     url: ${LOGIN_SERVER_DB_URL}
     hikari:
       maximum-pool-size: 10
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
 login:
   port: 1237
   threads: 10
@@ -23,4 +27,4 @@ logger:
   level: INFO
 clients:
   game:
-    url: http://localhost:8083/server
+    url: ${GAME_SERVER_URL}

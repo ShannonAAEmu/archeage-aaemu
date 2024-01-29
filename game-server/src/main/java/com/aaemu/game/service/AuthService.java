@@ -1,5 +1,6 @@
 package com.aaemu.game.service;
 
+import com.aaemu.game.service.dto.client.StreamAccountDto;
 import com.aaemu.game.service.dto.packet.client.CSListCharacter;
 import com.aaemu.game.service.dto.packet.client.X2EnterWorld;
 import com.aaemu.game.service.dto.packet.proxy.FinishState;
@@ -11,7 +12,7 @@ public interface AuthService {
 
     void secondStepEnterWorld(FinishState packet, Channel channel);
 
-    void changeState(long accountId);
+    void changeState(StreamAccountDto streamAccountDto);
 
     void sendCharacterList(CSListCharacter packet, Channel channel);
 }

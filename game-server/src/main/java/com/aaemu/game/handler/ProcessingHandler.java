@@ -12,7 +12,7 @@ import com.aaemu.game.service.dto.packet.client.X2EnterWorld;
 import com.aaemu.game.service.dto.packet.proxy.FinishState;
 import com.aaemu.game.service.dto.packet.proxy.Ping;
 import com.aaemu.game.service.exception.PacketException;
-import com.aaemu.game.service.model.Account;
+import com.aaemu.game.service.model.GameAccount;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,7 +27,7 @@ import java.util.Map;
 @ChannelHandler.Sharable
 public class ProcessingHandler extends SimpleChannelInboundHandler<ClientPacket> {
     private final PingPongService pingPongService;
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, GameAccount> accountMap;
     private final AuthService authService;
     private final GameService gameService;
 

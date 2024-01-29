@@ -4,7 +4,7 @@ import com.aaemu.stream.service.AuthService;
 import com.aaemu.stream.service.dto.packet.ClientPacket;
 import com.aaemu.stream.service.dto.packet.client.CTJoin;
 import com.aaemu.stream.service.exception.PacketException;
-import com.aaemu.stream.service.model.Account;
+import com.aaemu.stream.service.model.StreamAccount;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,7 +20,7 @@ import java.util.Map;
 @ChannelHandler.Sharable
 @Slf4j
 public class ProcessingHandler extends SimpleChannelInboundHandler<ClientPacket> {
-    private final Map<Channel, Account> accountMap;
+    private final Map<Channel, StreamAccount> accountMap;
     private final AuthService authService;
 
     @Override
