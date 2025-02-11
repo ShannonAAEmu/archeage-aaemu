@@ -1,20 +1,26 @@
 package com.aaemu.game.service.dto.packet.client;
 
 import com.aaemu.game.service.dto.packet.ClientPacket;
-import com.aaemu.game.util.ByteBufUtil;
+import com.aaemu.game.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Shannon
+ */
 @Data
 public class CSBroadcastVisualOption implements ClientPacket {
-    private final int voptFlag;     // voptflag
-    private List<Integer> stpList;  // stp
+    private final Channel channel;
+    private final byte voptFlag;     // voptflag
+    private List<Byte> stpList;     // stp
     private boolean helmet;
 
-    public CSBroadcastVisualOption(ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
+    public CSBroadcastVisualOption(Channel channel, ByteBufUtils byteBufUtil, ByteBuf byteBuf) {
+        this.channel = channel;
         this.voptFlag = byteBufUtil.readB(byteBuf);
         if (this.voptFlag == 1) {
             this.stpList = new ArrayList<>(6);

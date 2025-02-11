@@ -1,11 +1,15 @@
 package com.aaemu.game.service.dto.packet.server;
 
+import com.aaemu.game.service.enums.PacketLevel;
 import com.aaemu.game.service.enums.ServerPacket;
-import com.aaemu.game.util.ByteBufUtil;
+import com.aaemu.game.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
 
+/**
+ * @author Shannon
+ */
 @Data
 public class X2EnterWorldResponse {
     private byte reason;
@@ -22,15 +26,15 @@ public class X2EnterWorldResponse {
         this.gm = (byte) gm;
     }
 
-    public ByteBuf build(ByteBufUtil byteBufUtil) {
-        ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeLevel(1, byteBuf);
-        byteBufUtil.writeOpcode(ServerPacket.X2_ENTER_WORLD_RESPONSE, byteBuf);
-        byteBufUtil.writeW(reason, byteBuf);
-        byteBufUtil.writeB(gm, byteBuf);
-        byteBufUtil.writeD(sc, byteBuf);
-        byteBufUtil.writeW(sp, byteBuf);
-        byteBufUtil.writeQ(wf, byteBuf);
+    public ByteBuf build(ByteBufUtils byteBufUtils) {
+        ByteBuf byteBuf = Unpooled.buffer(21);
+        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtils.writeOpcode(ServerPacket.X2_ENTER_WORLD_RESPONSE, byteBuf);
+        byteBufUtils.writeW(reason, byteBuf);
+        byteBufUtils.writeB(gm, byteBuf);
+        byteBufUtils.writeD(sc, byteBuf);
+        byteBufUtils.writeW(sp, byteBuf);
+        byteBufUtils.writeQ(wf, byteBuf);
         return byteBuf;
     }
 }

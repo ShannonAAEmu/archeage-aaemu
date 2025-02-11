@@ -1,18 +1,20 @@
 package com.aaemu.game.service.dto.packet.server;
 
+import com.aaemu.game.service.enums.PacketLevel;
 import com.aaemu.game.service.enums.ServerPacket;
 import com.aaemu.game.service.model.Character;
-import com.aaemu.game.util.ByteBufUtil;
+import com.aaemu.game.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
-@EqualsAndHashCode
-@ToString
+/**
+ * @author Shannon
+ */
+@Data
 public class SCCharacterList {
     private final byte last;
     private byte count;
@@ -24,13 +26,13 @@ public class SCCharacterList {
         this.last = 1;
     }
 
-    public ByteBuf build(ByteBufUtil byteBufUtil) {
+    public ByteBuf build(ByteBufUtils byteBufUtils) {
         count = (byte) characterList.size();
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeLevel(1, byteBuf);
-        byteBufUtil.writeOpcode(ServerPacket.SC_CHARACTER_LIST, byteBuf);
-        byteBufUtil.writeB(last, byteBuf);
-        byteBufUtil.writeB(count, byteBuf);
+        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtils.writeOpcode(ServerPacket.SC_CHARACTER_LIST, byteBuf);
+        byteBufUtils.writeB(last, byteBuf);
+        byteBufUtils.writeB(count, byteBuf);
         if (count > 0) {
             for (Character character : characterList) {
                 // TODO character info

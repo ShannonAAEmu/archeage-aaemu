@@ -1,0 +1,7 @@
+server:
+  port: 8084
+zone_server:
+  port: 1240  # Zone server port
+  hex_logger:
+    active: true  # Print traffic
+    use_ignore_list: true  # Not print some packets

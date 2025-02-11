@@ -3,15 +3,17 @@ package com.aaemu.game.service;
 import com.aaemu.game.service.dto.packet.client.CSListCharacter;
 import com.aaemu.game.service.dto.packet.client.X2EnterWorld;
 import com.aaemu.game.service.dto.packet.proxy.FinishState;
-import io.netty.channel.Channel;
 
+/**
+ * @author Shannon
+ */
 public interface AuthService {
 
-    void firstStepEnterWorld(X2EnterWorld packet, Channel channel);
+    void enterWorld(X2EnterWorld packet);
 
-    void secondStepEnterWorld(FinishState packet, Channel channel);
+    void finishState(FinishState packet);
 
     void changeState(long accountId);
 
-    void sendCharacterList(CSListCharacter packet, Channel channel);
+    void listCharacter(CSListCharacter packet);
 }

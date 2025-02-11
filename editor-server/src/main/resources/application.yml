@@ -1,0 +1,8 @@
+server:
+  port: 8083
+editor_server:
+  port: 1230  # Editor server port
+  ping_interval: 5000 # Ping packet send interval (5 sec)
+  hex_logger:
+    active: true  # Print traffic
+    use_ignore_list: true  # Not print some packets

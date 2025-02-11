@@ -1,17 +1,18 @@
 package com.aaemu.login.service.dto.packet.client;
 
 import com.aaemu.login.service.dto.packet.ClientPacket;
-import com.aaemu.login.util.ByteBufUtil;
+import com.aaemu.login.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import lombok.Data;
 
 @Data
 public class CAChallengeResponse2 implements ClientPacket {
-    private long ch;
+    private final Channel channel;
+    private final String ch;
 
-    public CAChallengeResponse2(ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
-        for (int i = 0; i < 8; i++) {
-            this.ch = byteBufUtil.readD(byteBuf);
-        }
+    public CAChallengeResponse2(Channel channel, ByteBufUtils byteBufUtils, ByteBuf byteBuf) {
+        this.channel = channel;
+        this.ch = byteBufUtils.readHex(byteBuf, 32);
     }
 }

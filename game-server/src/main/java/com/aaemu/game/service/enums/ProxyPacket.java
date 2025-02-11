@@ -1,25 +1,30 @@
 package com.aaemu.game.service.enums;
 
+import com.aaemu.game.service.exception.PacketException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author Shannon
+ */
 @RequiredArgsConstructor
 @Getter
 public enum ProxyPacket {
-    CHANGE_STATE("0"),
-    FINISH_STATE("1"),
-    PING("12"),
-    PONG("13"),
-    SET_GAME_TYPE("F");
+    PING("0012", "1200"),   // Client
+    PONG("0013", "1300"),   // Server
+    CHANGE_STATE("0000", "0000"),   // Server
+    FINISH_STATE("0001", "0100"),   // Client
+    SET_GAME_TYPE("000F", "0F00");  // Server
 
     private final String opcode;
+    private final String rawOpcode;
 
-    public static ProxyPacket getByOpcode(String opcode) {
+    public static ProxyPacket getByRawOpcode(String rawOpcode) {
         for (ProxyPacket packet : values()) {
-            if (packet.getOpcode().equalsIgnoreCase(opcode)) {
+            if (packet.getRawOpcode().equalsIgnoreCase(rawOpcode)) {
                 return packet;
             }
         }
-        throw new RuntimeException(String.format("Unknown proxy packet opcode: %s", opcode));
+        throw new PacketException("Unknown proxy packet raw opcode: " + rawOpcode);
     }
 }

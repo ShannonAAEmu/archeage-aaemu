@@ -1,7 +1,7 @@
 package com.aaemu.login.service.dto.packet.server;
 
 import com.aaemu.login.service.enums.ServerPacket;
-import com.aaemu.login.util.ByteBufUtil;
+import com.aaemu.login.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -66,10 +66,10 @@ public class ACEnterWorldDenied {
         this.reason = (byte) reason;
     }
 
-    public ByteBuf build(ByteBufUtil byteBufUtil) {
+    public ByteBuf build(ByteBufUtils byteBufUtils) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeOpcode(ServerPacket.ACEnterWorldDenied, byteBuf);
-        byteBufUtil.writeB(reason, byteBuf);
+        byteBufUtils.writeOpcode(ServerPacket.ACEnterWorldDenied, byteBuf);
+        byteBufUtils.writeB(reason, byteBuf);
         return byteBuf;
     }
 }

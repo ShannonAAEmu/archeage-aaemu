@@ -1,26 +1,33 @@
 server:
-  port: 8081
-spring:
-  datasource:
-    username: ${LOGIN_SERVER_DB_NAME}
-    password: ${LOGIN_SERVER_DB_PASSWORD}
-    driver-class-name: ${LOGIN_SERVER_DB_DRIVER}
-    url: ${LOGIN_SERVER_DB_URL}
-    hikari:
-      maximum-pool-size: 10
-login:
-  port: 1237
-  threads: 10
-auth:
-  auto_registration: true
-  otp: false
-  otp_max_try: 3
-  ars: false          # Not released by XLGames in leaked client
-  pc_cert: false      # Not released by XLGames in leaked client
-  pc_cert_max_try: 3
-logger:
-  active: false
-  level: INFO
-clients:
-  game:
-    url: http://localhost:8083/server
+  port: 8080
+#spring:
+#  datasource:
+#    username: ${LOGIN_SERVER_DB_NAME}
+#    password: ${LOGIN_SERVER_DB_PASSWORD}
+#    driver-class-name: ${LOGIN_SERVER_DB_DRIVER}
+#    url: ${LOGIN_SERVER_DB_URL}
+#    hikari:
+#      maximum-pool-size: 10
+login_server:
+  port: 1237  # Login server port
+  hex_logger:
+    active: true  # Print traffic
+    use_ignore_list: true  # Not print some packets (More info: com.aaemu.login.service.netty.handler.LoggingHandler.java)
+  auth:
+    # auto_registration: true
+    otp:
+      active: false  # Use one time passwords (OTP)
+      max_attempts: 3  # OTP attempts
+      clean_time: 5000  # Clean expired OTPs (every 5 sec)
+    ars:
+      active: false # Not released by XLGames in leaked client
+    pc_cert:
+      active: false # Not released by XLGames in leaked client
+      max_attempts: 3 # PC cert attempts
+      clean_time: 5000  # Clean expired pc certs (every 5 sec)
+    editor_mode:
+      active: false  # Use server for Editor auth (not send Challenge2)
+  game_server:
+    id: 1
+    url: http://localhost:8081/server/login/
+    queue_time: 5000  # Update queue status (every 5 sec)
