@@ -3,6 +3,9 @@ package com.aaemu.game;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author Shannon
+ */
 @SpringBootApplication
 public class Application {
 

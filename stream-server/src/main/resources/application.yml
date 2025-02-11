@@ -1,11 +1,9 @@
 server:
   port: 8082
-stream:
-  port: 1250
-  threads: 10
-logger:
-  active: true
-  level: INFO
-clients:
-  game:
-    url: http://localhost:8083/server
+stream_server:
+  port: 1250  # Stream server port
+  hex_logger:
+    active: true  # Print traffic
+    use_ignore_list: true  # Not print some packets
+  game_server:
+    url: http://localhost:8081/server/stream/

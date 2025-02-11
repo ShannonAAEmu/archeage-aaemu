@@ -1,15 +1,19 @@
 package com.aaemu.game.service.dto.packet.server;
 
+import com.aaemu.game.service.enums.PacketLevel;
 import com.aaemu.game.service.enums.ServerPacket;
-import com.aaemu.game.util.ByteBufUtil;
+import com.aaemu.game.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
 
+/**
+ * @author Shannon
+ */
 @Data
 public class SCInitialConfig {
     private String host;
-    private String fSet;
+    private String fSet;    // siege
     private int count;
     private byte searchLevel;
     private byte bidLevel;
@@ -27,16 +31,19 @@ public class SCInitialConfig {
         this.postLevel = (byte) postLevel;
     }
 
-    public ByteBuf build(ByteBufUtil byteBufUtil) {
+    public ByteBuf build(ByteBufUtils byteBufUtils) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeLevel(1, byteBuf);
-        byteBufUtil.writeOpcode(ServerPacket.SC_INITIAL_CONFIG, byteBuf);
-        byteBufUtil.writeS(host, byteBuf);
-        byteBufUtil.writeS(fSet, byteBuf);
-        byteBufUtil.writeD(count, byteBuf);
-        byteBufUtil.writeB(searchLevel, byteBuf);
-        byteBufUtil.writeB(bidLevel, byteBuf);
-        byteBufUtil.writeB(postLevel, byteBuf);
+        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtils.writeOpcode(ServerPacket.SC_INITIAL_CONFIG, byteBuf);
+        byteBufUtils.writeS(host, byteBuf);
+        byteBufUtils.writeS(fSet, byteBuf);
+        byteBufUtils.writeD(count, byteBuf);
+        if (count > 0) {
+            byteBufUtils.writeD(0, byteBuf);    // unknown
+        }
+        byteBufUtils.writeB(searchLevel, byteBuf);
+        byteBufUtils.writeB(bidLevel, byteBuf);
+        byteBufUtils.writeB(postLevel, byteBuf);
         return byteBuf;
     }
 }

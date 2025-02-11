@@ -1,9 +1,11 @@
 server:
-  port: 8083
-game:
-  id: 1
-  port: 1239
-  threads: 100
-logger:
-  active: true
-  level: INFO
+  port: 8081
+game_server:
+  id: 1 # Game server id
+  name: Java server # Game server name
+  port: 64100  # Game server port
+  hex_logger:
+    active: true  # Print traffic
+    use_ignore_list: true  # Not print some packets
+  stream_server:
+    port: 1250

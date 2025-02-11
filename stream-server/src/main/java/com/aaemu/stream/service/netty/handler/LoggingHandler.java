@@ -1,0 +1,118 @@
+package com.aaemu.stream.service.netty.handler;
+
+
+import com.aaemu.stream.service.enums.ClientPacket;
+import com.aaemu.stream.service.enums.ServerPacket;
+import com.aaemu.stream.service.util.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.handler.logging.LogLevel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Shannon
+ */
+public class LoggingHandler extends io.netty.handler.logging.LoggingHandler {
+    private final ByteBufUtils byteBufUtils;
+    private final boolean useIgnoreList;
+    private List<ClientPacket> logIgnoreClientPackets;
+    private List<ServerPacket> logIgnoreServerPackets;
+
+    public LoggingHandler(LogLevel logLevel, ByteBufUtils byteBufUtils, boolean useIgnoreList) {
+        super(logLevel);
+        this.byteBufUtils = byteBufUtils;
+        this.useIgnoreList = useIgnoreList;
+        if (this.useIgnoreList) {
+            this.logIgnoreClientPackets = new ArrayList<>();
+            this.logIgnoreServerPackets = new ArrayList<>();
+            initLogIgnoreClientPackets();
+            initLogIgnoreServerPackets();
+        }
+    }
+
+    private void initLogIgnoreClientPackets() {
+        logIgnoreClientPackets.add(ClientPacket.CT_JOIN);
+    }
+
+    private void initLogIgnoreServerPackets() {
+        logIgnoreServerPackets.add(ServerPacket.TC_JOIN_RESPONSE);
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        ctx.fireChannelActive();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        ctx.fireChannelInactive();
+    }
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) {
+        ctx.fireChannelRegistered();
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) {
+        ctx.fireChannelUnregistered();
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (!useIgnoreList) {
+            super.channelRead(ctx, msg);
+            return;
+        }
+        if (logger.isEnabled(internalLevel)) {
+            try {
+                ((ByteBuf) msg).readerIndex(2);
+                ClientPacket clientPacket = ClientPacket.getByRawOpcode(byteBufUtils.readOpcode((ByteBuf) msg));
+                ((ByteBuf) msg).readerIndex(0);
+                if (!logIgnoreClientPackets.contains(clientPacket)) {
+                    logger.log(internalLevel, format(ctx, "READ", msg));
+                }
+            } catch (Exception e) {
+                ((ByteBuf) msg).readerIndex(0);
+                byteBufUtils.printBuf((ByteBuf) msg);
+                return;
+            }
+        }
+        ctx.fireChannelRead(msg);
+    }
+
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        if (!useIgnoreList) {
+            super.write(ctx, msg, promise);
+            return;
+        }
+        if (logger.isEnabled(internalLevel)) {
+            ((ByteBuf) msg).readerIndex(2);
+            ServerPacket serverPacket = ServerPacket.getByRawOpcode(byteBufUtils.readOpcode((ByteBuf) msg));
+            ((ByteBuf) msg).readerIndex(0);
+            if (!logIgnoreServerPackets.contains(serverPacket)) {
+                logger.log(internalLevel, format(ctx, "WRITE", msg));
+            }
+        }
+        ctx.write(msg, promise);
+    }
+
+    @Override
+    public void flush(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.fireChannelReadComplete();
+    }
+
+    @Override
+    public void close(ChannelHandlerContext ctx, ChannelPromise promise) {
+        ctx.close(promise);
+    }
+}

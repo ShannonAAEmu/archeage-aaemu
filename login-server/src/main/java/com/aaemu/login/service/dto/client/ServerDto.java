@@ -1,5 +1,8 @@
 package com.aaemu.login.service.dto.client;
 
+import com.aaemu.login.service.enums.ServerAvailability;
+import com.aaemu.login.service.enums.ServerCongestion;
+import com.aaemu.login.service.model.ServerRaceCongestion;
 import lombok.Data;
 
 import java.util.List;
@@ -8,16 +11,12 @@ import java.util.List;
 public class ServerDto {
     private byte id;
     private String name;
-    private boolean isAvailable;
-    private byte con;        // Congestion: 0 - blue, 1 - yellow, 2 - red
-    private List<Boolean> rCon; // Race congestion
+    private ServerAvailability available;
+    private ServerCongestion con;
+    private ServerRaceCongestion rCon;
+    private List<CharacterDto> characters;
 
-    public void setId(int id) {
-        this.id = (byte) id;
+    public ServerAvailability isAvailable() {
+        return this.available;
     }
-
-    public void setCon(int con) {
-        this.con = (byte) con;
-    }
-
 }

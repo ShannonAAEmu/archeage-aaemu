@@ -1,11 +1,15 @@
 package com.aaemu.game.service.dto.packet.server;
 
+import com.aaemu.game.service.enums.PacketLevel;
 import com.aaemu.game.service.enums.ServerPacket;
-import com.aaemu.game.util.ByteBufUtil;
+import com.aaemu.game.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
 
+/**
+ * @author Shannon
+ */
 @Data
 public class SCAccountWarned {
     private byte source;
@@ -15,12 +19,12 @@ public class SCAccountWarned {
         this.source = (byte) source;
     }
 
-    public ByteBuf build(ByteBufUtil byteBufUtil) {
+    public ByteBuf build(ByteBufUtils byteBufUtils) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeLevel(1, byteBuf);
-        byteBufUtil.writeOpcode(ServerPacket.SC_ACCOUNT_WARNED, byteBuf);
-        byteBufUtil.writeB(source, byteBuf);
-        byteBufUtil.writeS(msg, byteBuf);
+        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtils.writeOpcode(ServerPacket.SC_ACCOUNT_WARNED, byteBuf);
+        byteBufUtils.writeB(source, byteBuf);
+        byteBufUtils.writeS(msg, byteBuf);
         return byteBuf;
     }
 }

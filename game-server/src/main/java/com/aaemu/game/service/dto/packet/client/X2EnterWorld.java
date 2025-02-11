@@ -1,21 +1,24 @@
 package com.aaemu.game.service.dto.packet.client;
 
 import com.aaemu.game.service.dto.packet.ClientPacket;
-import com.aaemu.game.util.ByteBufUtil;
+import com.aaemu.game.service.util.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class X2EnterWorld implements ClientPacket {
+    private final Channel channel;
     private final long p_from;
     private final long p_to;
     private final long accountId;
     private final long cookie;
     private final long zoneId;
-    private final int tb;
+    private final byte tb;
 
-    public X2EnterWorld(ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
+    public X2EnterWorld(Channel channel, ByteBufUtils byteBufUtil, ByteBuf byteBuf) {
+        this.channel = channel;
         this.p_from = byteBufUtil.readD(byteBuf);
         this.p_to = byteBufUtil.readD(byteBuf);
         this.accountId = byteBufUtil.readD(byteBuf);

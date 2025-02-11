@@ -1,17 +1,14 @@
 package com.aaemu.login.service.model;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 public class Account {
-    private String name;
     private long id;
-
-    public Account(String name) {
-        this.name = name;
-    }
-
-    public Account(long id) {
-        this.id = id;
-    }
+    private final String name;
+    private String password;
+    private String challengeH1;
+    private String challengeH2;
 }

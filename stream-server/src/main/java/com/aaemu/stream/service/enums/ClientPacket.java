@@ -4,19 +4,23 @@ import com.aaemu.stream.service.exception.PacketException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author Shannon
+ */
 @RequiredArgsConstructor
 @Getter
 public enum ClientPacket {
-    CT_JOIN("1");
+    CT_JOIN("0001", "0100");
 
     private final String opcode;
+    private final String rawOpcode;
 
-    public static ClientPacket getByOpcode(String opcode) {
+    public static ClientPacket getByRawOpcode(String rawOpcode) {
         for (ClientPacket packet : values()) {
-            if (packet.getOpcode().equalsIgnoreCase(opcode)) {
+            if (packet.getRawOpcode().equalsIgnoreCase(rawOpcode)) {
                 return packet;
             }
         }
-        throw new PacketException(String.format("Unknown client packet opcode: %s", opcode));
+        throw new PacketException("Unknown client packet raw opcode: " + rawOpcode);
     }
 }
