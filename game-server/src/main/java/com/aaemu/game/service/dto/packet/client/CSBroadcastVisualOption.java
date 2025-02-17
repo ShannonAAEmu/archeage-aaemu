@@ -1,7 +1,7 @@
 package com.aaemu.game.service.dto.packet.client;
 
 import com.aaemu.game.service.dto.packet.ClientPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import lombok.Data;
@@ -15,19 +15,19 @@ import java.util.List;
 @Data
 public class CSBroadcastVisualOption implements ClientPacket {
     private final Channel channel;
-    private final byte voptFlag;     // voptflag
+    private final byte vOptFlag;     // voptflag
     private List<Byte> stpList;     // stp
     private boolean helmet;
 
-    public CSBroadcastVisualOption(Channel channel, ByteBufUtils byteBufUtil, ByteBuf byteBuf) {
+    public CSBroadcastVisualOption(Channel channel, ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.channel = channel;
-        this.voptFlag = byteBufUtil.readB(byteBuf);
-        if (this.voptFlag == 1) {
+        this.vOptFlag = byteBufUtil.readByte(byteBuf);
+        if (this.vOptFlag == 1) {
             this.stpList = new ArrayList<>(6);
             for (int i = 0; i < 6; i++) {
-                this.stpList.add(byteBufUtil.readB(byteBuf));
+                this.stpList.add(byteBufUtil.readByte(byteBuf));
             }
-        } else if (this.voptFlag == 2) {
+        } else if (this.vOptFlag == 2) {
             this.helmet = byteBufUtil.readBoolean(byteBuf);
         }
     }

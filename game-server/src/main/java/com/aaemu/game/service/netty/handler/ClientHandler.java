@@ -60,7 +60,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ClientPacket> {
             case Ping packet -> pingPongService.pong(packet);
             case X2EnterWorld packet -> authService.enterWorld(packet);
             case FinishState packet -> authService.finishState(packet);
-            case CSListCharacter packet -> authService.listCharacter(packet);
+            case CSListCharacter packet -> authService.sendCharacterList(packet);
             case CSBroadcastVisualOption packet -> gameServerService.broadcastVisualOption(packet);
             case CSRefreshInCharacterList packet -> gameServerService.refreshInCharacterList(packet);
             case CSLeaveWorld packet -> gameServerService.leaveWorld(packet);

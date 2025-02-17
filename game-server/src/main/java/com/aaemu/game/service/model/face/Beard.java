@@ -1,6 +1,6 @@
 package com.aaemu.game.service.model.face;
 
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Beard extends FixedDecalAsset {
 
-    public Beard(ByteBufUtils byteBufUtil, ByteBuf byteBuf) {
+    public Beard(ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         super(byteBufUtil, byteBuf);
     }
 }

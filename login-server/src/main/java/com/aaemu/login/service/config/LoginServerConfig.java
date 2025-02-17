@@ -9,8 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Shannon
@@ -27,21 +27,21 @@ public class LoginServerConfig {
 
     @Bean
     public Map<Channel, Account> accountMap() {
-        return new HashMap<>();
+        return new ConcurrentHashMap<>();
     }
 
     @Bean
     public Map<Channel, OneTimePassword> otpMap() {
-        return new HashMap<>();
+        return new ConcurrentHashMap<>();
     }
 
     @Bean
     public Map<Channel, OneTimePassword> pcCertMap() {
-        return new HashMap<>();
+        return new ConcurrentHashMap<>();
     }
 
     @Bean
-    public Map<Channel, Integer> queueMap() {
-        return new HashMap<>();
+    public Map<Channel, Short> queueMap() {
+        return new ConcurrentHashMap<>();
     }
 }

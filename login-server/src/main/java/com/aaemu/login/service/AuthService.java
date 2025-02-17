@@ -5,7 +5,7 @@ import com.aaemu.login.service.dto.packet.client.CARequestReconnect;
 
 public interface AuthService {
 
-    void requestAuth(CARequestAuth packet);
+    void auth(CARequestAuth packet);
 
     void requestReconnect(CARequestReconnect packet);
 }

@@ -4,7 +4,7 @@ import com.aaemu.zone.service.JoinService;
 import com.aaemu.zone.service.dto.packet.client.ZWJoinPacket;
 import com.aaemu.zone.service.dto.packet.server.WZJoinResponsePacket;
 import com.aaemu.zone.service.model.Account;
-import com.aaemu.zone.service.util.ByteBufUtils;
+import com.aaemu.zone.service.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JoinServiceImpl implements JoinService {
     private final Map<Channel, Account> accountMap;
-    private final ByteBufUtils byteBufUtils;
+    private final ByteBufUtil byteBufUtil;
 
     @Override
     public void join(ZWJoinPacket packet) {
@@ -27,6 +27,6 @@ public class JoinServiceImpl implements JoinService {
         WZJoinResponsePacket.setReason(0);
         WZJoinResponsePacket.setFSet("0"); // siege
         WZJoinResponsePacket.setBf(false);
-        packet.getChannel().writeAndFlush(WZJoinResponsePacket.build(byteBufUtils));
+        packet.getChannel().writeAndFlush(WZJoinResponsePacket.build(byteBufUtil));
     }
 }

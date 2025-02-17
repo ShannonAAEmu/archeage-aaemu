@@ -1,27 +1,23 @@
 package com.aaemu.login.service.dto.packet.server;
 
-import com.aaemu.login.service.enums.ServerPacket;
-import com.aaemu.login.service.util.ByteBufUtils;
+import com.aaemu.login.service.enums.packet.ServerPacket;
+import com.aaemu.login.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
 
 @Data
 public class ACWorldQueue {
-    private byte wid;
+    private byte worldId;   // wid
     private int turnCount;
     private int totalCount;
 
-    public void setWid(int wid) {
-        this.wid = (byte) wid;
-    }
-
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer(7);
-        byteBufUtils.writeOpcode(ServerPacket.ACWorldQueue, byteBuf);
-        byteBufUtils.writeB(wid, byteBuf);
-        byteBufUtils.writeW(turnCount, byteBuf);
-        byteBufUtils.writeW(totalCount, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.AC_WORLD_QUEUE, byteBuf);
+        byteBufUtil.writeByte(worldId, byteBuf);
+        byteBufUtil.writeShort(turnCount, byteBuf);
+        byteBufUtil.writeShort(totalCount, byteBuf);
         return byteBuf;
     }
 }

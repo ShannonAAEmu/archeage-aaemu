@@ -6,19 +6,14 @@ import io.netty.channel.Channel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class GameServerConfig {
 
     @Bean
     public Map<Channel, Account> accountMap() {
-        return new HashMap<>();
-    }
-
-    @Bean
-    public Map<Channel, Integer> cookieMap() {
-        return new HashMap<>();
+        return new ConcurrentHashMap<>();
     }
 }

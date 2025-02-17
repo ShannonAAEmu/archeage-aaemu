@@ -2,10 +2,11 @@ package com.aaemu.game.controller;
 
 import com.aaemu.game.service.AuthService;
 import com.aaemu.game.service.annotation.TestData;
-import com.aaemu.game.service.dto.client.QueueStatusDto;
-import com.aaemu.game.service.dto.client.ServerDto;
-import com.aaemu.game.service.enums.ServerAvailability;
-import com.aaemu.game.service.enums.ServerCongestion;
+import com.aaemu.game.service.dto.client.AccountFutureSet;
+import com.aaemu.game.service.dto.client.QueueStatus;
+import com.aaemu.game.service.dto.client.Server;
+import com.aaemu.game.service.enums.server.ServerAvailability;
+import com.aaemu.game.service.enums.server.ServerCongestion;
 import com.aaemu.game.service.model.ServerRaceCongestion;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -41,23 +42,28 @@ public class ServerController {
     @Value("${game_server.port}")
     private int gamePort;
 
+    @GetMapping(value = "/login/info/future_set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public AccountFutureSet futureSet() {
+        return authService.getAccountFutureSet();
+    }
+
     @GetMapping(value = "/login/info/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ServerDto info(@PathVariable int id) {
+    public Server info(@PathVariable int id) {
         log.info("Request server info from account: {}", id);
         // TODO server info logic
         return getTestServerInfo();
     }
 
     @GetMapping(value = "/login/queue/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public QueueStatusDto queue(@PathVariable int id) throws UnknownHostException {
+    public QueueStatus queue(@PathVariable int id) throws UnknownHostException {
         log.info("Request queue info from account: {}", id);
         // TODO server queue logic
         return getTestQueueStatus();
     }
 
     @TestData
-    private ServerDto getTestServerInfo() {
-        ServerDto server = new ServerDto();
+    private Server getTestServerInfo() {
+        Server server = new Server();
         server.setId(serverId);
         server.setName(serverName);
         server.setAvailable(ServerAvailability.AVAILABLE);
@@ -69,8 +75,8 @@ public class ServerController {
         return server;
     }
 
-    private QueueStatusDto getTestQueueStatus() throws UnknownHostException {
-        QueueStatusDto queueStatus = new QueueStatusDto();
+    private QueueStatus getTestQueueStatus() throws UnknownHostException {
+        QueueStatus queueStatus = new QueueStatus();
         queueStatus.setTurnCount(0);
         queueStatus.setTotalCount(0);
         queueStatus.setIp(InetAddress.getLocalHost().getHostAddress());
@@ -93,7 +99,7 @@ public class ServerController {
 //    }
 
     @GetMapping(value = "/stream/join/{id}")
-    public ResponseEntity<Void> streamJoin(@PathVariable long id) {
+    public ResponseEntity<Void> streamJoin(@PathVariable int id) {
         authService.changeState(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

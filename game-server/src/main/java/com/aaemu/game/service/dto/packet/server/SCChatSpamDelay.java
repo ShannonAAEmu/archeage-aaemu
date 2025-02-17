@@ -1,8 +1,8 @@
 package com.aaemu.game.service.dto.packet.server;
 
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ServerPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ServerPacket;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -17,14 +17,14 @@ public class SCChatSpamDelay {
     private float spamYellDelay;
     private int maxChatLen;
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
-        byteBufUtils.writeOpcode(ServerPacket.SC_CHAT_SPAM_DELAY, byteBuf);
-        byteBufUtils.writeF(yellDelay, byteBuf);
-        byteBufUtils.writeD(maxSpamYell, byteBuf);
-        byteBufUtils.writeF(spamYellDelay, byteBuf);
-        byteBufUtils.writeD(maxChatLen, byteBuf);
+        byteBufUtil.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.SC_CHAT_SPAM_DELAY, byteBuf);
+        byteBufUtil.writeFloat(yellDelay, byteBuf);
+        byteBufUtil.writeInt(maxSpamYell, byteBuf);
+        byteBufUtil.writeFloat(spamYellDelay, byteBuf);
+        byteBufUtil.writeInt(maxChatLen, byteBuf);
         return byteBuf;
     }
 }

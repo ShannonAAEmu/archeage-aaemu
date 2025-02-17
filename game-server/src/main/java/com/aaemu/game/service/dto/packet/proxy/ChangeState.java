@@ -1,8 +1,8 @@
 package com.aaemu.game.service.dto.packet.proxy;
 
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ProxyPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ProxyPacket;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -12,13 +12,13 @@ import lombok.Data;
  */
 @Data
 public class ChangeState {
-    private int state;
+    private final int state;
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer(8);
-        byteBufUtils.writeLevel(PacketLevel._2, byteBuf);
-        byteBufUtils.writeOpcode(ProxyPacket.CHANGE_STATE, byteBuf);
-        byteBufUtils.writeD(state, byteBuf);
+        byteBufUtil.writeLevel(PacketLevel._2, byteBuf);
+        byteBufUtil.writeOpcode(ProxyPacket.CHANGE_STATE, byteBuf);
+        byteBufUtil.writeInt(state, byteBuf);
         return byteBuf;
     }
 }

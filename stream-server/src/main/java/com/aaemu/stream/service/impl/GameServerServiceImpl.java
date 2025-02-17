@@ -18,7 +18,7 @@ public class GameServerServiceImpl implements GameServerService {
     private String gameServerUrl;
 
     @Override
-    public void join(long accountId) {
+    public void join(int accountId) {
         restClient.get()
                 .uri(gameServerUrl + "join/" + accountId)
                 .retrieve()

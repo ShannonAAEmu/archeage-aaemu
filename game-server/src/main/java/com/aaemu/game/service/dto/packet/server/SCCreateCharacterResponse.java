@@ -1,13 +1,20 @@
 package com.aaemu.game.service.dto.packet.server;
 
 import com.aaemu.game.service.dto.packet.client.CSCreateCharacter;
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ServerPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.enums.fraction.FractionType;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ServerPacket;
+import com.aaemu.game.service.enums.unit.AbilityType;
+import com.aaemu.game.service.model.Account;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author Shannon
@@ -15,50 +22,57 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class SCCreateCharacterResponse {
-    private final CSCreateCharacter character;
+    private final CSCreateCharacter createCharacter;
+    private final Map<Channel, Account> accountMap;
+    private byte startLevel;
+    private int startMoney;
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public void setStartLevel(int startLevel) {
+        this.startLevel = (byte) startLevel;
+    }
+
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
-        byteBufUtils.writeOpcode(ServerPacket.SC_CREATE_CHARACTER_RESPONSE, byteBuf);
-
-        byteBufUtils.writeD(1, byteBuf);
-        byteBufUtils.writeS(character.getName(), byteBuf);
-        byteBufUtils.writeB((byte) character.getUnitRace().getId(), byteBuf);
-        byteBufUtils.writeB((byte) character.getUnitGender().getId(), byteBuf);
-        byteBufUtils.writeB(character.getLevel(), byteBuf);
-        byteBufUtils.writeD(100, byteBuf);  // health
-        byteBufUtils.writeD(100, byteBuf);  // mana
-        byteBufUtils.writeD(177, byteBuf);  // zid
-        byteBufUtils.writeD(0, byteBuf);    // type
-        byteBufUtils.writeD(0, byteBuf);    // type
-        byteBufUtils.writeD(0, byteBuf);    // family
-        byteBufUtils.writeD(0, byteBuf);    // items_in_inventory
-        byteBufUtils.writeB((byte) character.getUnitAbilityList().getFirst().getType(), byteBuf);
-        byteBufUtils.writeB((byte) character.getUnitAbilityList().get(1).getType(), byteBuf);
-        byteBufUtils.writeB((byte) character.getUnitAbilityList().getLast().getType(), byteBuf);
-        byteBufUtils.writeQ(0, byteBuf); // x
-        byteBufUtils.writeQ(0, byteBuf); // y
-        byteBufUtils.writeF(1.0f, byteBuf); // z
-        byteBufUtils.writeB(character.getHeadDetails().getCustomModelType().getType(), byteBuf);
-        byteBufUtils.write(character.getHeadDetails().getFace().build(), byteBuf);
-        byteBufUtils.writeW(50, byteBuf);   // laborPower
-        byteBufUtils.writeQ(System.currentTimeMillis(), byteBuf);   // lastLaborPowerModified
-        byteBufUtils.writeW(0, byteBuf);    // deadCount
-        byteBufUtils.writeQ(System.currentTimeMillis(), byteBuf);   // deadTime
-        byteBufUtils.writeD(0, byteBuf);    // rezWaitDuration
-        byteBufUtils.writeQ(System.currentTimeMillis(), byteBuf);   // rezTime
-        byteBufUtils.writeD(0, byteBuf);    // rezPenaltyDuration
-        byteBufUtils.writeQ(System.currentTimeMillis(), byteBuf);   // lastWorldLeaveTime
-        byteBufUtils.writeQ(0, byteBuf);    // moneyAmount
-        byteBufUtils.writeQ(0, byteBuf);    // moneyAmount
-        byteBufUtils.writeW(0, byteBuf);    // crimePoint
-        byteBufUtils.writeD(0, byteBuf);    // crimeRecord
-        byteBufUtils.writeW(0, byteBuf);    // crimeScore
-        byteBufUtils.writeQ(System.currentTimeMillis(), byteBuf);   // deleteRequestedTime
-        byteBufUtils.writeQ(System.currentTimeMillis(), byteBuf);   // transferRequestedTime
-        byteBufUtils.writeQ(0, byteBuf);    // deleteDelay
-        byteBufUtils.writeD(0, byteBuf);    // consumedLp
+        byteBufUtil.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.SC_CREATE_CHARACTER_RESPONSE, byteBuf);
+        byteBufUtil.writeInt(accountMap.get(createCharacter.getChannel()).getId(), byteBuf);
+        byteBufUtil.writeString(StringUtils.capitalize(createCharacter.getName()), byteBuf);
+        byteBufUtil.writeByte(createCharacter.getUnitRace().getId(), byteBuf);
+        byteBufUtil.writeByte(createCharacter.getUnitGender().getId(), byteBuf);
+        byteBufUtil.writeByte(startLevel, byteBuf);
+        byteBufUtil.writeInt(100, byteBuf);  // health
+        byteBufUtil.writeInt(100, byteBuf);  // mana
+        byteBufUtil.writeInt(260, byteBuf);  // zid
+        byteBufUtil.writeInt(FractionType.NUIAN.getType(), byteBuf);
+        byteBufUtil.writeInt(0, byteBuf);    // type ?
+        byteBufUtil.writeInt(0, byteBuf);    // family
+        for (int i = 0; i < 28; i++) {
+            byteBufUtil.writeInt(0, byteBuf);    // type (items_in_inventory)
+        }
+        for (AbilityType abilityType : createCharacter.getAbilityList()) {
+            byteBufUtil.writeByte(abilityType.getType(), byteBuf);
+        }
+        byteBufUtil.writeLong(2000, byteBuf); // x
+        byteBufUtil.writeLong(2000, byteBuf); // y
+        byteBufUtil.writeFloat(136.0f, byteBuf); // z
+        byteBufUtil.write(createCharacter.getHeadDetails().build(), byteBuf);
+        byteBufUtil.writeShort((short) 50, byteBuf);   // laborPower
+        byteBufUtil.writeLong(System.currentTimeMillis(), byteBuf);   // lastLaborPowerModified
+        byteBufUtil.writeShort((short) 0, byteBuf);    // deadCount
+        byteBufUtil.writeLong(System.currentTimeMillis(), byteBuf);   // deadTime
+        byteBufUtil.writeInt(0, byteBuf);    // rezWaitDuration
+        byteBufUtil.writeLong(System.currentTimeMillis(), byteBuf);   // rezTime
+        byteBufUtil.writeInt(0, byteBuf);    // rezPenaltyDuration
+        byteBufUtil.writeLong(System.currentTimeMillis(), byteBuf);   // lastWorldLeaveTime
+        byteBufUtil.writeLong(startMoney, byteBuf);    // moneyAmount
+        byteBufUtil.writeLong(0, byteBuf);    // moneyAmount ?
+        byteBufUtil.writeShort((short) 0, byteBuf);    // crimePoint
+        byteBufUtil.writeInt(0, byteBuf);    // crimeRecord
+        byteBufUtil.writeShort((short) 0, byteBuf);    // crimeScore
+        byteBufUtil.writeLong(0, byteBuf);   // deleteRequestedTime
+        byteBufUtil.writeLong(0, byteBuf);   // transferRequestedTime
+        byteBufUtil.writeLong(0, byteBuf);    // deleteDelay
+        byteBufUtil.writeInt(0, byteBuf);    // consumedLp
 
         return byteBuf;
     }

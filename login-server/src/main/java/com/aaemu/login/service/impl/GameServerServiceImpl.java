@@ -1,8 +1,9 @@
 package com.aaemu.login.service.impl;
 
 import com.aaemu.login.service.GameServerService;
-import com.aaemu.login.service.dto.client.QueueStatusDto;
-import com.aaemu.login.service.dto.client.ServerDto;
+import com.aaemu.login.service.dto.client.AccountFutureSet;
+import com.aaemu.login.service.dto.client.QueueStatus;
+import com.aaemu.login.service.dto.client.ServerInfo;
 import com.aaemu.login.service.model.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,18 +22,26 @@ public class GameServerServiceImpl implements GameServerService {
     private String gameServerUrl;
 
     @Override
-    public ServerDto getServerInfo(Account account) {
+    public AccountFutureSet getAccountFutureSet() {
         return restClient.get()
-                .uri(gameServerUrl + "info/" + account.getId())
+                .uri(gameServerUrl + "info/future_set")
                 .retrieve()
-                .body(ServerDto.class);
+                .body(AccountFutureSet.class);
     }
 
     @Override
-    public QueueStatusDto getQueueStatus(int worldId, Account account) {
+    public ServerInfo getServerInfo(Account account) {
+        return restClient.get()
+                .uri(gameServerUrl + "info/" + account.getId())
+                .retrieve()
+                .body(ServerInfo.class);
+    }
+
+    @Override
+    public QueueStatus getQueueStatus(Account account) {
         return restClient.get()
                 .uri(gameServerUrl + "queue/" + account.getId())
                 .retrieve()
-                .body(QueueStatusDto.class);
+                .body(QueueStatus.class);
     }
 }

@@ -5,5 +5,5 @@ package com.aaemu.stream.service;
  */
 public interface GameServerService {
 
-    void join(long accountId);
+    void join(int accountId);
 }

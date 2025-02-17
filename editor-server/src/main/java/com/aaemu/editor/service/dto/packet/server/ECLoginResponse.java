@@ -1,7 +1,7 @@
 package com.aaemu.editor.service.dto.packet.server;
 
 import com.aaemu.editor.service.enums.ServerPacket;
-import com.aaemu.editor.service.util.ByteBufUtils;
+import com.aaemu.editor.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -24,11 +24,11 @@ public class ECLoginResponse {
         this.reason = (byte) reason;
     }
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer(5 + fileServerPath.getBytes().length);
-        byteBufUtils.writeOpcode(ServerPacket.EC_LOGIN_RESPONSE, byteBuf);
-        byteBufUtils.writeB(reason, byteBuf);
-        byteBufUtils.writeS(fileServerPath, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.EC_LOGIN_RESPONSE, byteBuf);
+        byteBufUtil.writeByte(reason, byteBuf);
+        byteBufUtil.writeString(fileServerPath, byteBuf);
         return byteBuf;
     }
 }

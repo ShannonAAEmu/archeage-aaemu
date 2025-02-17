@@ -1,7 +1,7 @@
 package com.aaemu.zone.service.dto.packet.server;
 
 import com.aaemu.zone.service.enums.ServerPacket;
-import com.aaemu.zone.service.util.ByteBufUtils;
+import com.aaemu.zone.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -19,12 +19,12 @@ public class WZJoinResponsePacket {
         this.reason = (byte) reason;
     }
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtils.writeOpcode(ServerPacket.WZ_Join_Response, byteBuf);
-        byteBufUtils.writeW(reason, byteBuf);
-        byteBufUtils.writeS(fSet, byteBuf);
-        byteBufUtils.writeBoolean(bf, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.WZ_Join_Response, byteBuf);
+        byteBufUtil.writeShort(reason, byteBuf);
+        byteBufUtil.writeString(fSet, byteBuf);
+        byteBufUtil.writeBoolean(bf, byteBuf);
         return byteBuf;
     }
 }

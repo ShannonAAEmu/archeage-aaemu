@@ -1,7 +1,7 @@
 package com.aaemu.game.service.dto.packet.proxy;
 
 import com.aaemu.game.service.dto.packet.ClientPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import lombok.Data;
@@ -16,10 +16,10 @@ public class Ping implements ClientPacket {
     private final long when;
     private final int local;
 
-    public Ping(Channel channel, ByteBufUtils byteBufUtils, ByteBuf byteBuf) {
+    public Ping(Channel channel, ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.channel = channel;
-        this.tm = byteBufUtils.readQ(byteBuf);
-        this.when = byteBufUtils.readQ(byteBuf);
-        this.local = (int) byteBufUtils.readD(byteBuf);
+        this.tm = byteBufUtil.readLong(byteBuf);
+        this.when = byteBufUtil.readLong(byteBuf);
+        this.local = byteBufUtil.readInt(byteBuf);
     }
 }

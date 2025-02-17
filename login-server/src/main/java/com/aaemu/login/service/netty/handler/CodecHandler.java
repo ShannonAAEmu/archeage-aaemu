@@ -10,10 +10,11 @@ import com.aaemu.login.service.dto.packet.client.CAPcCertNumber;
 import com.aaemu.login.service.dto.packet.client.CARequestAuth;
 import com.aaemu.login.service.dto.packet.client.CARequestAuthTencent;
 import com.aaemu.login.service.dto.packet.client.CARequestReconnect;
-import com.aaemu.login.service.enums.ClientPacket;
-import com.aaemu.login.service.enums.ServerPacket;
-import com.aaemu.login.service.util.ByteBufUtils;
-import com.aaemu.login.service.util.ChannelUtils;
+import com.aaemu.login.service.dto.packet.client.CATestArs;
+import com.aaemu.login.service.enums.packet.ClientPacket;
+import com.aaemu.login.service.enums.packet.ServerPacket;
+import com.aaemu.login.service.util.ByteBufUtil;
+import com.aaemu.login.service.util.ChannelUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
@@ -35,45 +36,46 @@ public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
     private static final String RECEIVED = "Received: {}{}";
     private static final String SEND = "Send: {}";
     private static final String BRACKETS = "{}{}";
-    private final ByteBufUtils byteBufUtils;
+    private final ByteBufUtil byteBufUtil;
     private final boolean isEditorMode;
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) {
         int length = msg.readableBytes();
-        ServerPacket serverPacket = ServerPacket.getByRawOpcode(byteBufUtils.readOpcode(msg));
-        log.info(SEND_PACKET, serverPacket.name(), serverPacket.getOpcode(), serverPacket.getRawOpcode(), length, ChannelUtils.getChannel(ctx).remoteAddress().toString());
+        ServerPacket serverPacket = ServerPacket.getByRawOpcode(byteBufUtil.readOpcode(msg));
+        log.info(SEND_PACKET, serverPacket.name(), serverPacket.getOpcode(), serverPacket.getRawOpcode(), length, ChannelUtil.getChannel(ctx).remoteAddress().toString());
         msg.readerIndex(0);
         out.writeShortLE(length);
         out.writeBytes(msg);
-        log.info(SEND, byteBufUtils.toHex(out));
+        log.info(SEND, byteBufUtil.toHex(out));
         log.info(BRACKETS, LINE, System.lineSeparator());
     }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) {
-        int length = byteBufUtils.readW(msg);
-        ClientPacket clientPacket = ClientPacket.getByRawOpcode(byteBufUtils.readOpcode(msg));
+        short length = byteBufUtil.readShort(msg);
+        ClientPacket clientPacket = ClientPacket.getByRawOpcode(byteBufUtil.readOpcode(msg));
         log.info(LINE);
-        log.info(RECEIVED_PACKET, clientPacket.name(), clientPacket.getOpcode(), clientPacket.getRawOpcode(), length, ChannelUtils.getChannel(ctx).remoteAddress().toString());
+        log.info(RECEIVED_PACKET, clientPacket.name(), clientPacket.getOpcode(), clientPacket.getRawOpcode(), length, ChannelUtil.getChannel(ctx).remoteAddress().toString());
         int pos = msg.readerIndex();
         msg.readerIndex(0);
-        log.info(RECEIVED, byteBufUtils.toHex(msg), System.lineSeparator());
+        log.info(RECEIVED, byteBufUtil.toHex(msg), System.lineSeparator());
         msg.readerIndex(pos);
         switch (clientPacket) {
-            case CARequestAuth -> out.add(new CARequestAuth(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CARequestAuthTencent -> out.add(new CARequestAuthTencent(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CAChallengeResponse -> out.add(new CAChallengeResponse(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CAChallengeResponse2 -> out.add(new CAChallengeResponse2(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CAOtpNumber -> out.add(new CAOtpNumber(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CAPcCertNumber -> out.add(new CAPcCertNumber(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CAListWorld -> out.add(new CAListWorld(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CAEnterWorld -> out.add(new CAEnterWorld(ChannelUtils.getChannel(ctx), byteBufUtils, msg, isEditorMode));
-            case CACancelEnterWorld -> out.add(new CACancelEnterWorld(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
-            case CARequestReconnect -> out.add(new CARequestReconnect(ChannelUtils.getChannel(ctx), byteBufUtils, msg));
+            case CA_REQUEST_AUTH -> out.add(new CARequestAuth(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_REQUEST_AUTH_TENCENT -> out.add(new CARequestAuthTencent(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_CHALLENGE_RESPONSE -> out.add(new CAChallengeResponse(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_CHALLENGE_RESPONSE_2 -> out.add(new CAChallengeResponse2(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_OTP_NUMBER -> out.add(new CAOtpNumber(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_TEST_ARS -> out.add(new CATestArs(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_PC_CERT_NUMBER -> out.add(new CAPcCertNumber(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_LIST_WORLD -> out.add(new CAListWorld(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_ENTER_WORLD -> out.add(new CAEnterWorld(ChannelUtil.getChannel(ctx), byteBufUtil, msg, isEditorMode));
+            case CA_CANCEL_ENTER_WORLD -> out.add(new CACancelEnterWorld(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CA_REQUEST_RECONNECT -> out.add(new CARequestReconnect(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
         }
         if (msg.readableBytes() != 0) {
-            throw new RuntimeException(String.format("Not all bytes were read from the client packet: %s [opcode: %s, raw opcode: %s, size: %d, address: %s]", clientPacket.name(), clientPacket.getOpcode(), clientPacket.getRawOpcode(), msg.readableBytes(), ChannelUtils.getChannel(ctx)));
+            throw new RuntimeException(String.format("Not all bytes were read from the client packet: %s [opcode: %s, raw opcode: %s, size: %d, address: %s]", clientPacket.name(), clientPacket.getOpcode(), clientPacket.getRawOpcode(), msg.readableBytes(), ChannelUtil.getChannel(ctx)));
         }
     }
 }

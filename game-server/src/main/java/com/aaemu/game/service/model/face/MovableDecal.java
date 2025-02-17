@@ -1,6 +1,6 @@
 package com.aaemu.game.service.model.face;
 
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -12,32 +12,32 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public abstract class MovableDecal {
-    private final ByteBufUtils byteBufUtil;
-    private final long movableDecalAssetId;
-    private final float movableDecalWeight;
-    private final float movableDecalScale;
-    private final float movableDecalRotate;
-    private final int movableDecalMoveX;
-    private final int movableDecalMoveY;
+    private final ByteBufUtil byteBufUtil;
+    private final int movableDecalAssetId;  // type
+    private final float movableDecalWeight; // weight
+    private final float movableDecalScale;  // scale
+    private final float movableDecalRotate; // rotate
+    private final short movableDecalMoveX;  // moveX
+    private final short movableDecalMoveY;  // moveY
 
-    public MovableDecal(ByteBufUtils byteBufUtil, ByteBuf byteBuf) {
+    public MovableDecal(ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.byteBufUtil = byteBufUtil;
-        this.movableDecalAssetId = byteBufUtil.readD(byteBuf);
-        this.movableDecalWeight = byteBufUtil.readF(byteBuf);
-        this.movableDecalScale = byteBufUtil.readF(byteBuf);
-        this.movableDecalRotate = byteBufUtil.readF(byteBuf);
-        this.movableDecalMoveX = byteBufUtil.readW(byteBuf);
-        this.movableDecalMoveY = byteBufUtil.readW(byteBuf);
+        this.movableDecalAssetId = byteBufUtil.readInt(byteBuf);
+        this.movableDecalWeight = byteBufUtil.readFloat(byteBuf);
+        this.movableDecalScale = byteBufUtil.readFloat(byteBuf);
+        this.movableDecalRotate = byteBufUtil.readFloat(byteBuf);
+        this.movableDecalMoveX = byteBufUtil.readShort(byteBuf);
+        this.movableDecalMoveY = byteBufUtil.readShort(byteBuf);
     }
 
     public ByteBuf build() {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeD((int) movableDecalAssetId, byteBuf);
-        byteBufUtil.writeF((int) movableDecalWeight, byteBuf);
-        byteBufUtil.writeF((int) movableDecalScale, byteBuf);
-        byteBufUtil.writeF((int) movableDecalRotate, byteBuf);
-        byteBufUtil.writeW(movableDecalMoveX, byteBuf);
-        byteBufUtil.writeW(movableDecalMoveY, byteBuf);
+        byteBufUtil.writeInt(movableDecalAssetId, byteBuf);
+        byteBufUtil.writeFloat(movableDecalWeight, byteBuf);
+        byteBufUtil.writeFloat(movableDecalScale, byteBuf);
+        byteBufUtil.writeFloat(movableDecalRotate, byteBuf);
+        byteBufUtil.writeShort(movableDecalMoveX, byteBuf);
+        byteBufUtil.writeShort(movableDecalMoveY, byteBuf);
         return byteBuf;
     }
 }

@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum UnitGender {
-    MALE(1),
-    FEMALE(2);
+    MALE((byte) 1),
+    FEMALE((byte) 2);
 
-    private final int id;
+    private final byte id;
 
     public static UnitGender get(byte id) {
         for (UnitGender unitGender : values()) {

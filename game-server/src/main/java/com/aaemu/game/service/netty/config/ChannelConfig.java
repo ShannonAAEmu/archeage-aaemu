@@ -6,7 +6,7 @@ import com.aaemu.game.service.netty.handler.ClientHandler;
 import com.aaemu.game.service.netty.handler.CodecHandler;
 import com.aaemu.game.service.netty.handler.ExceptionHandler;
 import com.aaemu.game.service.netty.handler.LoggingHandler;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class ChannelConfig extends ChannelInitializer<SocketChannel> {
     private final Map<Channel, Account> accountMap;
     private final ClientHandler clientHandler;
-    private final ByteBufUtils byteBufUtils;
+    private final ByteBufUtil byteBufUtil;
 
     @Value("${game_server.hex_logger.active}")
     private boolean useHexLog;
@@ -38,9 +38,9 @@ public class ChannelConfig extends ChannelInitializer<SocketChannel> {
         ch.pipeline().addLast("exception", new ExceptionHandler(accountMap));
         ch.pipeline().addLast("framer", new LengthFieldBasedFrameDecoder());
         if (useHexLog) {
-            ch.pipeline().addLast("logger", new LoggingHandler(LogLevel.INFO, byteBufUtils, useIgnoreList));
+            ch.pipeline().addLast("logger", new LoggingHandler(LogLevel.INFO, byteBufUtil, useIgnoreList));
         }
-        ch.pipeline().addLast("codec", new CodecHandler(byteBufUtils));
+        ch.pipeline().addLast("codec", new CodecHandler(byteBufUtil));
         ch.pipeline().addLast("client_handler", clientHandler);
     }
 }

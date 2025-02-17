@@ -1,8 +1,8 @@
 package com.aaemu.game.service.dto.packet.proxy;
 
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ProxyPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ProxyPacket;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -16,13 +16,13 @@ public class SetGameType {
     private long checksum;
     private boolean immersive;
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtils.writeLevel(PacketLevel._2, byteBuf);
-        byteBufUtils.writeOpcode(ProxyPacket.SET_GAME_TYPE, byteBuf);
-        byteBufUtils.writeS(level, byteBuf);
-        byteBufUtils.writeQ(checksum, byteBuf);
-        byteBufUtils.writeBoolean(immersive, byteBuf);
+        byteBufUtil.writeLevel(PacketLevel._2, byteBuf);
+        byteBufUtil.writeOpcode(ProxyPacket.SET_GAME_TYPE, byteBuf);
+        byteBufUtil.writeString(level, byteBuf);
+        byteBufUtil.writeLong(checksum, byteBuf);
+        byteBufUtil.writeBoolean(immersive, byteBuf);
         return byteBuf;
     }
 }

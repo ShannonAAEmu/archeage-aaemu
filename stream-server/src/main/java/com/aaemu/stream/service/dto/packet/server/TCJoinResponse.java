@@ -1,7 +1,7 @@
 package com.aaemu.stream.service.dto.packet.server;
 
 import com.aaemu.stream.service.enums.ServerPacket;
-import com.aaemu.stream.service.util.ByteBufUtils;
+import com.aaemu.stream.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -17,10 +17,10 @@ public class TCJoinResponse {
         this.response = response;
     }
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer(3);
-        byteBufUtils.writeOpcode(ServerPacket.TC_JOIN_RESPONSE, byteBuf);
-        byteBufUtils.writeB(response, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.TC_JOIN_RESPONSE, byteBuf);
+        byteBufUtil.writeByte(response, byteBuf);
         return byteBuf;
     }
 }
