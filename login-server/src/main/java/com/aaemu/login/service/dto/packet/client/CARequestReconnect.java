@@ -1,7 +1,7 @@
 package com.aaemu.login.service.dto.packet.client;
 
 import com.aaemu.login.service.dto.packet.ClientPacket;
-import com.aaemu.login.service.util.ByteBufUtils;
+import com.aaemu.login.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import lombok.Data;
@@ -9,20 +9,20 @@ import lombok.Data;
 @Data
 public class CARequestReconnect implements ClientPacket {
     private final Channel channel;
-    private final long p_from;
-    private final long p_to;
-    private final long aid; // Account id
-    private final int wid;   // World id
-    private final long cookie;
+    private final int p_from;
+    private final int p_to;
+    private final int accountId;  // aid
+    private final byte worldId;   // wid
+    private final int cookie;
     private final String mac;
 
-    public CARequestReconnect(Channel channel, ByteBufUtils byteBufUtils, ByteBuf byteBuf) {
+    public CARequestReconnect(Channel channel, ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.channel = channel;
-        this.p_from = byteBufUtils.readD(byteBuf);
-        this.p_to = byteBufUtils.readD(byteBuf);
-        this.aid = byteBufUtils.readD(byteBuf);
-        this.wid = byteBufUtils.readB(byteBuf);
-        this.cookie = byteBufUtils.readD(byteBuf);
-        this.mac = byteBufUtils.readS(byteBuf);
+        this.p_from = byteBufUtil.readInt(byteBuf);
+        this.p_to = byteBufUtil.readInt(byteBuf);
+        this.accountId = byteBufUtil.readInt(byteBuf);
+        this.worldId = byteBufUtil.readByte(byteBuf);
+        this.cookie = byteBufUtil.readInt(byteBuf);
+        this.mac = byteBufUtil.readString(byteBuf);
     }
 }

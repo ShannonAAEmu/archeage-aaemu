@@ -3,7 +3,7 @@ package com.aaemu.game.service.impl;
 import com.aaemu.game.service.PingPongService;
 import com.aaemu.game.service.dto.packet.proxy.Ping;
 import com.aaemu.game.service.dto.packet.proxy.Pong;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 public class PingPongServiceImpl implements PingPongService {
-    private final ByteBufUtils byteBufUtils;
+    private final ByteBufUtil byteBufUtil;
 
     @Override
     public void pong(Ping packet) {
@@ -26,6 +26,6 @@ public class PingPongServiceImpl implements PingPongService {
         pong.setRemote(Instant.EPOCH.getEpochSecond() * 10000);
         pong.setLocal(packet.getLocal());
         pong.setWorld(Instant.now().getNano());
-        packet.getChannel().writeAndFlush(pong.build(byteBufUtils));
+        packet.getChannel().writeAndFlush(pong.build(byteBufUtil));
     }
 }

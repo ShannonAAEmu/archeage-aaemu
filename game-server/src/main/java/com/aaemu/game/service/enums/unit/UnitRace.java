@@ -10,16 +10,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum UnitRace {
-    NUIAN(1),
-    FAIRY(2),
-    DWARF(3),
-    ELF(4),
-    HARIHARAN(5),
-    FERRE(6),
-    RETURNED(7),
-    WARBORN(8);
+    NUIAN((byte) 1),
+    FAIRY((byte) 2),
+    DWARF((byte) 3),
+    ELF((byte) 4),
+    HARIHARAN((byte) 5),
+    FERRE((byte) 6),
+    RETURNED((byte) 7),
+    WARBORN((byte) 8);
 
-    private final int id;
+    private final byte id;
 
     public static UnitRace get(byte id) {
         for (UnitRace unitRace : values()) {

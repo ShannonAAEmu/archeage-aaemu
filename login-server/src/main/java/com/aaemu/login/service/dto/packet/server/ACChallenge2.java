@@ -1,24 +1,31 @@
 package com.aaemu.login.service.dto.packet.server;
 
-import com.aaemu.login.service.enums.ServerPacket;
-import com.aaemu.login.service.util.ByteBufUtils;
+import com.aaemu.login.service.enums.packet.ServerPacket;
+import com.aaemu.login.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ACChallenge2 {
     private int round;
     private String salt;
-    private int ch;
+    private List<Integer> ch;
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ACChallenge2() {
+        this.ch = new ArrayList<>(8);
+    }
+
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer(40 + salt.getBytes().length);
-        byteBufUtils.writeOpcode(ServerPacket.ACChallenge2, byteBuf);
-        byteBufUtils.writeD(round, byteBuf);
-        byteBufUtils.writeS(salt, byteBuf);
-        for (int i = 0; i < 8; i++) {
-            byteBufUtils.writeD(ch, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.AC_CHALLENGE_2, byteBuf);
+        byteBufUtil.writeInt(round, byteBuf);
+        byteBufUtil.writeString(salt, byteBuf);
+        for (Integer i : ch) {
+            byteBufUtil.writeInt(i, byteBuf);
         }
         return byteBuf;
     }

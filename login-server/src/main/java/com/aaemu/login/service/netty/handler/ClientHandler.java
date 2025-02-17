@@ -13,6 +13,7 @@ import com.aaemu.login.service.dto.packet.client.CAOtpNumber;
 import com.aaemu.login.service.dto.packet.client.CAPcCertNumber;
 import com.aaemu.login.service.dto.packet.client.CARequestAuth;
 import com.aaemu.login.service.dto.packet.client.CARequestReconnect;
+import com.aaemu.login.service.dto.packet.client.CATestArs;
 import com.aaemu.login.service.exception.PacketException;
 import com.aaemu.login.service.model.Account;
 import io.netty.channel.Channel;
@@ -58,16 +59,17 @@ public class ClientHandler extends SimpleChannelInboundHandler<ClientPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ClientPacket clientPacket) {
         switch (clientPacket) {
-            case CARequestAuth packet -> authService.requestAuth(packet);
+            case CARequestAuth packet -> authService.auth(packet);
             case CAChallengeResponse packet -> challengeService.challenge(packet);
             case CAChallengeResponse2 packet -> challengeService.challenge(packet);
             case CAOtpNumber packet -> challengeService.processOneTimePassword(packet);
+            case CATestArs packet -> challengeService.testArs(packet);
             case CAPcCertNumber packet -> challengeService.processPcCertificate(packet);
-            case CAListWorld packet -> worldService.requestList(packet.getChannel());
-            case CAEnterWorld packet -> worldService.requestEnter(packet.getChannel(), packet.getWid());
+            case CAListWorld packet -> worldService.sendWorldList(packet.getChannel());
+            case CAEnterWorld packet -> worldService.enterToWorld(packet.getChannel(), packet.getWid());
             case CACancelEnterWorld packet -> worldService.cancelEnterWorld(packet);
-            case CARequestReconnect packet -> worldService.requestReconnect(packet);
-            default -> throw new PacketException("Unknown packet for processing: " + clientPacket);
+            case CARequestReconnect packet -> authService.requestReconnect(packet);
+            default -> throw new PacketException("Not implemented: " + clientPacket);
         }
     }
 }

@@ -1,7 +1,8 @@
 package com.aaemu.login.service;
 
-import com.aaemu.login.service.dto.client.QueueStatusDto;
-import com.aaemu.login.service.dto.client.ServerDto;
+import com.aaemu.login.service.dto.client.AccountFutureSet;
+import com.aaemu.login.service.dto.client.QueueStatus;
+import com.aaemu.login.service.dto.client.ServerInfo;
 import com.aaemu.login.service.model.Account;
 
 /**
@@ -9,7 +10,9 @@ import com.aaemu.login.service.model.Account;
  */
 public interface GameServerService {
 
-    ServerDto getServerInfo(Account account);
+    AccountFutureSet getAccountFutureSet();
 
-    QueueStatusDto getQueueStatus(int worldId, Account account);
+    ServerInfo getServerInfo(Account account);
+
+    QueueStatus getQueueStatus(Account account);
 }

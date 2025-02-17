@@ -2,7 +2,7 @@ package com.aaemu.zone.service.netty.handler;
 
 import com.aaemu.zone.service.enums.ClientPacket;
 import com.aaemu.zone.service.enums.ServerPacket;
-import com.aaemu.zone.service.util.ByteBufUtils;
+import com.aaemu.zone.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -15,14 +15,14 @@ import java.util.List;
  * @author Shannon
  */
 public class LoggingHandler extends io.netty.handler.logging.LoggingHandler {
-    private final ByteBufUtils byteBufUtils;
+    private final ByteBufUtil byteBufUtil;
     private final boolean useIgnoreList;
     private List<ClientPacket> logIgnoreClientPackets;
     private List<ServerPacket> logIgnoreServerPackets;
 
-    public LoggingHandler(LogLevel logLevel, ByteBufUtils byteBufUtils, boolean useIgnoreList) {
+    public LoggingHandler(LogLevel logLevel, ByteBufUtil byteBufUtil, boolean useIgnoreList) {
         super(logLevel);
-        this.byteBufUtils = byteBufUtils;
+        this.byteBufUtil = byteBufUtil;
         this.useIgnoreList = useIgnoreList;
         if (this.useIgnoreList) {
             this.logIgnoreClientPackets = new ArrayList<>();
@@ -78,7 +78,7 @@ public class LoggingHandler extends io.netty.handler.logging.LoggingHandler {
         }
         if (logger.isEnabled(internalLevel)) {
             ((ByteBuf) msg).readerIndex(2);
-            ClientPacket clientPacket = ClientPacket.getByRawOpcode(byteBufUtils.readOpcode(((ByteBuf) msg)));
+            ClientPacket clientPacket = ClientPacket.getByRawOpcode(byteBufUtil.readOpcode(((ByteBuf) msg)));
             ((ByteBuf) msg).readerIndex(0);
             if (!logIgnoreClientPackets.contains(clientPacket)) {
                 logger.log(internalLevel, format(ctx, "READ", msg));
@@ -95,7 +95,7 @@ public class LoggingHandler extends io.netty.handler.logging.LoggingHandler {
         }
         if (logger.isEnabled(internalLevel)) {
             ((ByteBuf) msg).readerIndex(2);
-            ServerPacket serverPacket = ServerPacket.getByRawOpcode(byteBufUtils.readOpcode(((ByteBuf) msg)));
+            ServerPacket serverPacket = ServerPacket.getByRawOpcode(byteBufUtil.readOpcode(((ByteBuf) msg)));
             ((ByteBuf) msg).readerIndex(0);
             if (!logIgnoreServerPackets.contains(serverPacket)) {
                 logger.log(internalLevel, format(ctx, "WRITE", msg));

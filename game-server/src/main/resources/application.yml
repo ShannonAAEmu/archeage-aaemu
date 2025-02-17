@@ -9,3 +9,10 @@ game_server:
     use_ignore_list: true  # Not print some packets
   stream_server:
     port: 1250
+  config:
+    total_characters_limit: 4
+    is_pre_select_character_period: false
+    welcome_msg: Welcome to AAEMU Java server
+    start:
+      level: 1
+      money: 10000  # Copper

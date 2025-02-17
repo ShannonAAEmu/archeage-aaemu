@@ -5,7 +5,7 @@ import com.aaemu.editor.service.dto.packet.client.CELogin;
 import com.aaemu.editor.service.dto.packet.server.ECLoginResponse;
 import com.aaemu.editor.service.dto.packet.server.Ping;
 import com.aaemu.editor.service.model.Account;
-import com.aaemu.editor.service.util.ByteBufUtils;
+import com.aaemu.editor.service.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +24,7 @@ import java.util.Map;
 @Log4j2
 public class AuthServiceImpl implements AuthService {
     private final Map<Channel, Account> accountMap;
-    private final ByteBufUtils byteBufUtils;
+    private final ByteBufUtil byteBufUtil;
 
     @Override
     public void login(CELogin packet) {
@@ -33,13 +33,13 @@ public class AuthServiceImpl implements AuthService {
         ECLoginResponse loginResponse = new ECLoginResponse();
         loginResponse.setReason(0);
         loginResponse.setFileServerPath("D:\\aa\\Bin32");
-        packet.getChannel().writeAndFlush(loginResponse.build(byteBufUtils));
+        packet.getChannel().writeAndFlush(loginResponse.build(byteBufUtil));
     }
 
     @Scheduled(fixedRateString = "${editor_server.ping_interval}")
     private void ping() {
         for (Map.Entry<Channel, Account> entry : accountMap.entrySet()) {
-            entry.getKey().writeAndFlush(new Ping().build(byteBufUtils));
+            entry.getKey().writeAndFlush(new Ping().build(byteBufUtil));
         }
     }
 }

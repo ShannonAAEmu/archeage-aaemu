@@ -1,9 +1,9 @@
 package com.aaemu.game.service.dto.packet.server;
 
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ServerPacket;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ServerPacket;
 import com.aaemu.game.service.model.Character;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -16,23 +16,19 @@ import java.util.List;
  */
 @Data
 public class SCCharacterList {
-    private final byte last;
+    private boolean isLast; // last
     private byte count;
 
     @Setter
     private List<Character> characterList;
 
-    public SCCharacterList() {
-        this.last = 1;
-    }
-
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         count = (byte) characterList.size();
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
-        byteBufUtils.writeOpcode(ServerPacket.SC_CHARACTER_LIST, byteBuf);
-        byteBufUtils.writeB(last, byteBuf);
-        byteBufUtils.writeB(count, byteBuf);
+        byteBufUtil.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.SC_CHARACTER_LIST, byteBuf);
+        byteBufUtil.writeBoolean(isLast, byteBuf);
+        byteBufUtil.writeByte(count, byteBuf);
         if (count > 0) {
             for (Character character : characterList) {
                 // TODO character info

@@ -1,6 +1,6 @@
 package com.aaemu.game.service.model.face;
 
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -10,20 +10,20 @@ import lombok.Data;
  */
 @Data
 public abstract class FixedDecalAsset {
-    private final ByteBufUtils byteBufUtil;
-    private final long id;
+    private final ByteBufUtil byteBufUtil;
+    private final int id;       // type
     private final float weight;
 
-    public FixedDecalAsset(ByteBufUtils byteBufUtil, ByteBuf byteBuf) {
+    public FixedDecalAsset(ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.byteBufUtil = byteBufUtil;
-        this.id = byteBufUtil.readD(byteBuf);
-        this.weight = byteBufUtil.readF(byteBuf);
+        this.id = byteBufUtil.readInt(byteBuf);
+        this.weight = byteBufUtil.readFloat(byteBuf);
     }
 
     public ByteBuf build() {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtil.writeD((int) id, byteBuf);
-        byteBufUtil.writeF(weight, byteBuf);
+        byteBufUtil.writeInt(id, byteBuf);
+        byteBufUtil.writeFloat(weight, byteBuf);
         return byteBuf;
     }
 }

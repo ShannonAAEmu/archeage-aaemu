@@ -1,61 +1,61 @@
 package com.aaemu.login.service.dto.packet.server;
 
-import com.aaemu.login.service.dto.client.CharacterDto;
-import com.aaemu.login.service.dto.client.ServerDto;
-import com.aaemu.login.service.enums.ServerPacket;
+import com.aaemu.login.service.dto.client.Character;
+import com.aaemu.login.service.dto.client.ServerInfo;
+import com.aaemu.login.service.enums.packet.ServerPacket;
 import com.aaemu.login.service.model.ServerRaceCongestion;
-import com.aaemu.login.service.util.ByteBufUtils;
+import com.aaemu.login.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
 public class ACWorldList {
+    private final ServerInfo serverInfo;
     private byte count;
-    private ServerDto serverDto;
-    private byte chCount;   // character count
-    private List<CharacterDto> characterDtoList;
+    private byte characterCount;   // chCount
+    private List<Character> characterList;
 
-    public void setCount(int count) {
-        this.count = (byte) count;
+    public ACWorldList(ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
+        this.count = (byte) (Objects.isNull(serverInfo) ? 0 : 1);
+        this.characterList = serverInfo.getCharacters();
+        this.characterCount = (byte) serverInfo.getCharacters().size();
     }
 
-    public void setChCount(int chCount) {
-        this.chCount = (byte) chCount;
-    }
-
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
-        ByteBuf byteBuf = Unpooled.buffer();    // TODO calc size
-        byteBufUtils.writeOpcode(ServerPacket.ACWorldList, byteBuf);
-        byteBufUtils.writeB(count, byteBuf);
-        byteBufUtils.writeB(serverDto.getId(), byteBuf);
-        byteBufUtils.writeS(serverDto.getName(), byteBuf);
-        byteBufUtils.writeBoolean(serverDto.isAvailable().getStatus(), byteBuf);
-        if (serverDto.isAvailable().getStatus()) {
-            byteBufUtils.writeB(serverDto.getCon().getCongestion(), byteBuf);
-            ServerRaceCongestion rCon = serverDto.getRCon();
-            byteBufUtils.writeBoolean(rCon.isWarborn(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isNuian(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isReturned(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isFairy(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isElf(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isHariharan(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isFerre(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isDwarf(), byteBuf);
-            byteBufUtils.writeBoolean(rCon.isNone(), byteBuf);
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
+        ByteBuf byteBuf = Unpooled.buffer();
+        byteBufUtil.writeOpcode(ServerPacket.AC_WORLD_LIST, byteBuf);
+        byteBufUtil.writeByte(count, byteBuf);
+        byteBufUtil.writeByte(serverInfo.getId(), byteBuf);
+        byteBufUtil.writeString(serverInfo.getName(), byteBuf);
+        byteBufUtil.writeBoolean(serverInfo.isAvailable().getStatus(), byteBuf);
+        if (serverInfo.isAvailable().getStatus()) {
+            byteBufUtil.writeByte(serverInfo.getCon().getCongestion(), byteBuf);
+            ServerRaceCongestion rCon = serverInfo.getRCon();
+            byteBufUtil.writeBoolean(rCon.isWarborn(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isNuian(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isReturned(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isFairy(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isElf(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isHariharan(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isFerre(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isDwarf(), byteBuf);
+            byteBufUtil.writeBoolean(rCon.isNone(), byteBuf);
         }
-        byteBufUtils.writeB(chCount, byteBuf);
-        characterDtoList.forEach(characterDto -> {
-            byteBufUtils.writeD(characterDto.getAccountId(), byteBuf);
-            byteBufUtils.writeB(characterDto.getWorldId(), byteBuf);
-            byteBufUtils.writeD(characterDto.getCharId(), byteBuf);
-            byteBufUtils.writeS(characterDto.getName(), byteBuf);
-            byteBufUtils.writeB(characterDto.getCharRace(), byteBuf);
-            byteBufUtils.writeB(characterDto.getCharGender(), byteBuf);
-            byteBufUtils.writeS(characterDto.getGuid(), byteBuf);
-            byteBufUtils.writeQ(characterDto.getV(), byteBuf);
+        byteBufUtil.writeByte(characterCount, byteBuf);
+        characterList.forEach(character -> {
+            byteBufUtil.writeInt(character.getAccountId(), byteBuf);
+            byteBufUtil.writeByte(character.getWorldId(), byteBuf);
+            byteBufUtil.writeInt(character.getCharId(), byteBuf);
+            byteBufUtil.writeString(character.getName(), byteBuf);
+            byteBufUtil.writeByte(character.getCharRace(), byteBuf);
+            byteBufUtil.writeByte(character.getCharGender(), byteBuf);
+            byteBufUtil.writeString(character.getGuid(), byteBuf);
+            byteBufUtil.write(character.getV(), byteBuf);
         });
         return byteBuf;
     }

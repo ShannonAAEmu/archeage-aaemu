@@ -1,8 +1,8 @@
 package com.aaemu.game.service.dto.packet.server;
 
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ServerPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ServerPacket;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -12,29 +12,29 @@ import lombok.Data;
  */
 @Data
 public class X2EnterWorldResponse {
-    private byte reason;
-    private byte gm;
-    private int sc;
-    private int sp;
+    private short reason;
+    private byte gameMode;    // gm
+    private int streamServerCookie; // sc
+    private int streamServerPort; // sp
     private long wf;
 
     public void setReason(int reason) {
-        this.reason = (byte) reason;
+        this.reason = (short) reason;
     }
 
-    public void setGm(int gm) {
-        this.gm = (byte) gm;
+    public void setGameMode(int gameMode) {
+        this.gameMode = (byte) gameMode;
     }
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer(21);
-        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
-        byteBufUtils.writeOpcode(ServerPacket.X2_ENTER_WORLD_RESPONSE, byteBuf);
-        byteBufUtils.writeW(reason, byteBuf);
-        byteBufUtils.writeB(gm, byteBuf);
-        byteBufUtils.writeD(sc, byteBuf);
-        byteBufUtils.writeW(sp, byteBuf);
-        byteBufUtils.writeQ(wf, byteBuf);
+        byteBufUtil.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.X2_ENTER_WORLD_RESPONSE, byteBuf);
+        byteBufUtil.writeShort(reason, byteBuf);
+        byteBufUtil.writeByte(gameMode, byteBuf);
+        byteBufUtil.writeInt(streamServerCookie, byteBuf);
+        byteBufUtil.writeShort(streamServerPort, byteBuf);
+        byteBufUtil.writeLong(wf, byteBuf);
         return byteBuf;
     }
 }

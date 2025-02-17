@@ -1,12 +1,13 @@
 package com.aaemu.login.service.impl;
 
+import com.aaemu.login.service.GameServerService;
 import com.aaemu.login.service.LoginService;
 import com.aaemu.login.service.dto.packet.server.ACAccountWarned;
 import com.aaemu.login.service.dto.packet.server.ACAuthResponse;
 import com.aaemu.login.service.dto.packet.server.ACJoinResponse;
 import com.aaemu.login.service.dto.packet.server.ACLoginDenied;
 import com.aaemu.login.service.model.Account;
-import com.aaemu.login.service.util.ByteBufUtils;
+import com.aaemu.login.service.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,8 +19,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Log4j2
 public class LoginServiceImpl implements LoginService {
+    private final GameServerService gameServerService;
     private final Map<Channel, Account> accountMap;
-    private final ByteBufUtils byteBufUtils;
+    private final ByteBufUtil byteBufUtil;
 
     @Override
     public void rejectLogin(Channel channel, int reason, String msg) {
@@ -27,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
         acLoginDenied.setReason(reason);
         acLoginDenied.setVp("");
         acLoginDenied.setMsg(msg);
-        channel.writeAndFlush(acLoginDenied.build(byteBufUtils));
+        channel.writeAndFlush(acLoginDenied.build(byteBufUtil));
     }
 
     @Override
@@ -35,7 +37,7 @@ public class LoginServiceImpl implements LoginService {
         ACAccountWarned acAccountWarned = new ACAccountWarned();
         acAccountWarned.setSource(source);
         acAccountWarned.setMsg(msg);
-        channel.writeAndFlush(acAccountWarned.build(byteBufUtils));
+        channel.writeAndFlush(acAccountWarned.build(byteBufUtil));
     }
 
     @Override
@@ -44,19 +46,20 @@ public class LoginServiceImpl implements LoginService {
             return false;
         }
         accountMap.get(channel).setId(1);
-        log.info("Validate: {}", accountMap.get(channel));
-        return true;    // TODO validation
+        accountMap.get(channel).setCookie(accountMap.get(channel).getId());
+        // TODO validation
+        return true;
     }
 
     @Override
     public void allowLogin(Channel channel) {
         ACJoinResponse acJoinResponse = new ACJoinResponse();
-        acJoinResponse.setReason(0);
-        acJoinResponse.setAfs(10000000); // 1442306
-        channel.writeAndFlush(acJoinResponse.build(byteBufUtils));
+        acJoinResponse.setReason((short) 0);
+        acJoinResponse.setAccountFutureSet(gameServerService.getAccountFutureSet());
+        channel.writeAndFlush(acJoinResponse.build(byteBufUtil));
         ACAuthResponse acAuthResponse = new ACAuthResponse();
-        acAuthResponse.setAccountId((int) accountMap.get(channel).getId());
+        acAuthResponse.setAccountId(accountMap.get(channel).getId());
         acAuthResponse.setWsk("");
-        channel.writeAndFlush(acAuthResponse.build(byteBufUtils));
+        channel.writeAndFlush(acAuthResponse.build(byteBufUtil));
     }
 }

@@ -1,5 +1,6 @@
 package com.aaemu.game.service;
 
+import com.aaemu.game.service.dto.client.AccountFutureSet;
 import com.aaemu.game.service.dto.packet.client.CSListCharacter;
 import com.aaemu.game.service.dto.packet.client.X2EnterWorld;
 import com.aaemu.game.service.dto.packet.proxy.FinishState;
@@ -9,11 +10,13 @@ import com.aaemu.game.service.dto.packet.proxy.FinishState;
  */
 public interface AuthService {
 
+    AccountFutureSet getAccountFutureSet();
+
     void enterWorld(X2EnterWorld packet);
 
     void finishState(FinishState packet);
 
-    void changeState(long accountId);
+    void changeState(int accountId);
 
-    void listCharacter(CSListCharacter packet);
+    void sendCharacterList(CSListCharacter packet);
 }

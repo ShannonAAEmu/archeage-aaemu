@@ -1,8 +1,9 @@
 package com.aaemu.game.service.dto.packet.server;
 
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ServerPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ServerPacket;
+import com.aaemu.game.service.model.FutureSet;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -13,8 +14,8 @@ import lombok.Data;
 @Data
 public class SCInitialConfig {
     private String host;
-    private String fSet;    // siege
-    private int count;
+    private FutureSet futureSet;
+    private int count;  // unknown game\scripts\x2ui\baselib\candidatlist.lua
     private byte searchLevel;
     private byte bidLevel;
     private byte postLevel;
@@ -31,19 +32,19 @@ public class SCInitialConfig {
         this.postLevel = (byte) postLevel;
     }
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBufUtils.writeLevel(PacketLevel._1, byteBuf);
-        byteBufUtils.writeOpcode(ServerPacket.SC_INITIAL_CONFIG, byteBuf);
-        byteBufUtils.writeS(host, byteBuf);
-        byteBufUtils.writeS(fSet, byteBuf);
-        byteBufUtils.writeD(count, byteBuf);
+        byteBufUtil.writeLevel(PacketLevel._1, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.SC_INITIAL_CONFIG, byteBuf);
+        byteBufUtil.writeString(host, byteBuf);
+        byteBufUtil.writeString(futureSet.build(), byteBuf);
+        byteBufUtil.writeInt(count, byteBuf);
         if (count > 0) {
-            byteBufUtils.writeD(0, byteBuf);    // unknown
+            byteBufUtil.writeInt(0, byteBuf);
         }
-        byteBufUtils.writeB(searchLevel, byteBuf);
-        byteBufUtils.writeB(bidLevel, byteBuf);
-        byteBufUtils.writeB(postLevel, byteBuf);
+        byteBufUtil.writeByte(searchLevel, byteBuf);
+        byteBufUtil.writeByte(bidLevel, byteBuf);
+        byteBufUtil.writeByte(postLevel, byteBuf);
         return byteBuf;
     }
 }

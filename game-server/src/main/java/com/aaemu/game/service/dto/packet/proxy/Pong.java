@@ -1,8 +1,8 @@
 package com.aaemu.game.service.dto.packet.proxy;
 
-import com.aaemu.game.service.enums.PacketLevel;
-import com.aaemu.game.service.enums.ProxyPacket;
-import com.aaemu.game.service.util.ByteBufUtils;
+import com.aaemu.game.service.enums.packet.PacketLevel;
+import com.aaemu.game.service.enums.packet.ProxyPacket;
+import com.aaemu.game.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -19,16 +19,16 @@ public class Pong {
     private int local;
     private int world;
 
-    public ByteBuf build(ByteBufUtils byteBufUtil) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer();
         byteBufUtil.writeLevel(PacketLevel._2, byteBuf);
         byteBufUtil.writeOpcode(ProxyPacket.PONG, byteBuf);
-        byteBufUtil.writeQ(tm, byteBuf);
-        byteBufUtil.writeQ(when, byteBuf);
-        byteBufUtil.writeQ(elapsed, byteBuf);
-        byteBufUtil.writeQ(remote, byteBuf);
-        byteBufUtil.writeD(local, byteBuf);
-        byteBufUtil.writeD(world, byteBuf);
+        byteBufUtil.writeLong(tm, byteBuf);
+        byteBufUtil.writeLong(when, byteBuf);
+        byteBufUtil.writeLong(elapsed, byteBuf);
+        byteBufUtil.writeLong(remote, byteBuf);
+        byteBufUtil.writeInt(local, byteBuf);
+        byteBufUtil.writeInt(world, byteBuf);
         return byteBuf;
     }
 }

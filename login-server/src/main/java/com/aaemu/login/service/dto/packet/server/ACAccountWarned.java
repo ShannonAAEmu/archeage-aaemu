@@ -1,7 +1,7 @@
 package com.aaemu.login.service.dto.packet.server;
 
-import com.aaemu.login.service.enums.ServerPacket;
-import com.aaemu.login.service.util.ByteBufUtils;
+import com.aaemu.login.service.enums.packet.ServerPacket;
+import com.aaemu.login.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -67,11 +67,11 @@ public class ACAccountWarned {
         this.source = (byte) source;
     }
 
-    public ByteBuf build(ByteBufUtils byteBufUtils) {
+    public ByteBuf build(ByteBufUtil byteBufUtil) {
         ByteBuf byteBuf = Unpooled.buffer(5 + msg.getBytes().length);
-        byteBufUtils.writeOpcode(ServerPacket.ACAccountWarned, byteBuf);
-        byteBufUtils.writeB(source, byteBuf);
-        byteBufUtils.writeS(msg, byteBuf);
+        byteBufUtil.writeOpcode(ServerPacket.AC_ACCOUNT_WARNED, byteBuf);
+        byteBufUtil.writeByte(source, byteBuf);
+        byteBufUtil.writeString(msg, byteBuf);
         return byteBuf;
     }
 }

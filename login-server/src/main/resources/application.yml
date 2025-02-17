@@ -17,12 +17,16 @@ login_server:
     # auto_registration: true
     otp:
       active: false  # Use one time passwords (OTP)
+      num: 1234
       max_attempts: 3  # OTP attempts
       clean_time: 5000  # Clean expired OTPs (every 5 sec)
     ars:
       active: false # Not released by XLGames in leaked client
+      num: 1234
+      timeout: 10000
     pc_cert:
       active: false # Not released by XLGames in leaked client
+      num: 1234
       max_attempts: 3 # PC cert attempts
       clean_time: 5000  # Clean expired pc certs (every 5 sec)
     editor_mode:

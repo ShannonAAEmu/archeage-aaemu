@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class Account {
-    private final long id;
+    private final int id;
     private String name;
 }

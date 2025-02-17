@@ -1,7 +1,7 @@
 package com.aaemu.login.service.dto.packet.client;
 
 import com.aaemu.login.service.dto.packet.ClientPacket;
-import com.aaemu.login.service.util.ByteBufUtils;
+import com.aaemu.login.service.util.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import lombok.Data;
@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 public class CACancelEnterWorld implements ClientPacket {
     private final Channel channel;
-    private final int wid;   // World id
+    private final byte worldId;   // wid
 
-    public CACancelEnterWorld(Channel channel, ByteBufUtils byteBufUtil, ByteBuf byteBuf) {
+    public CACancelEnterWorld(Channel channel, ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.channel = channel;
-        this.wid = byteBufUtil.readB(byteBuf);
+        this.worldId = byteBufUtil.readByte(byteBuf);
     }
 }
