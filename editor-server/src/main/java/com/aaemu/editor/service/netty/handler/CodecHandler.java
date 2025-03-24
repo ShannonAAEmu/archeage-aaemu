@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
-    private static final String RECEIVED_PACKET = "Received packet: {} [opcode: {}, raw opcode: {}, length: {}, address: {}]{}";
+    private static final String RECEIVED_PACKET = "Received packet: {} [opcode: {}, raw opcode: {}, length: {}, address: {}]";
     private static final String SEND_PACKET = "Send packet: {} [opcode: {}, raw opcode: {}, length: {}, address: {}]";
     private static final String LINE = StringUtils.repeat('-', 100);
     private static final String RECEIVED = "Received: {}{}";
@@ -50,7 +50,7 @@ public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
         ClientPacket clientPacket = ClientPacket.getByRawOpcode(byteBufUtil.readOpcode(msg));
         if (!ClientPacket.EC_PONG.equals(clientPacket)) {
             log.info(LINE);
-            log.info(RECEIVED_PACKET, clientPacket.name(), clientPacket.getOpcode(), clientPacket.getRawOpcode(), length, ChannelUtil.getChannel(ctx).remoteAddress().toString(), System.lineSeparator());
+            log.info(RECEIVED_PACKET, clientPacket.name(), clientPacket.getOpcode(), clientPacket.getRawOpcode(), length, ChannelUtil.getChannel(ctx).remoteAddress().toString());
             int pos = msg.readerIndex();
             msg.readerIndex(0);
             log.info(RECEIVED, byteBufUtil.toHex(msg), System.lineSeparator());

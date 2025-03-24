@@ -1,25 +1,23 @@
 package com.aaemu.login.service;
 
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse;
-import com.aaemu.login.service.dto.packet.client.CAChallengeResponse2;
 import com.aaemu.login.service.dto.packet.client.CAOtpNumber;
 import com.aaemu.login.service.dto.packet.client.CAPcCertNumber;
 import com.aaemu.login.service.dto.packet.client.CATestArs;
 import io.netty.channel.Channel;
 
+/**
+ * @author Shannon
+ */
 public interface ChallengeService {
 
-    void sendChallenge(Channel channel);
+    void send(Channel channel);
 
-    void sendChallenge2(Channel channel);
+    void receive(CAChallengeResponse packet);
 
-    void challenge(CAChallengeResponse packet);
+    void receive(CAOtpNumber packet);
 
-    void challenge(CAChallengeResponse2 packet);
+    void receive(CATestArs packet);
 
-    void processOneTimePassword(CAOtpNumber packet);
-
-    void testArs(CATestArs packet);
-
-    void processPcCertificate(CAPcCertNumber packet);
+    void receive(CAPcCertNumber packet);
 }

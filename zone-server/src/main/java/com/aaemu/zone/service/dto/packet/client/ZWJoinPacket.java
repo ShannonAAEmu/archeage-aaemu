@@ -9,13 +9,13 @@ import lombok.Data;
 @Data
 public class ZWJoinPacket implements ClientPacket {
     private final Channel channel;
-    private final long p_from;
-    private final long p_to;
-    private final long id;
-    private final long ip;
+    private final int p_from;
+    private final int p_to;
+    private final int id;
+    private final int ip;
     private final int port;
-    private final long accountId;
-    private final long instanceId;
+    private final int accountId;
+    private final int instanceId;
     private final boolean dev;
 
     public ZWJoinPacket(Channel channel, ByteBufUtil byteBufUtil, ByteBuf byteBuf) {

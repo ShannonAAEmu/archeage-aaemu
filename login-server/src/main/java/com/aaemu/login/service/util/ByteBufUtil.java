@@ -2,18 +2,22 @@ package com.aaemu.login.service.util;
 
 import com.aaemu.login.service.enums.packet.ServerPacket;
 import io.netty.buffer.ByteBuf;
+import io.netty.util.internal.StringUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author Shannon
+ */
 @Component
 public class ByteBufUtil {
     private static final String[] BYTE2HEX = new String[256];
 
     public ByteBufUtil() {
         for (int i = 0; i < BYTE2HEX.length; ++i) {
-            BYTE2HEX[i] = io.netty.util.internal.StringUtil.byteToHexStringPadded(i);
+            BYTE2HEX[i] = StringUtil.byteToHexStringPadded(i);
         }
     }
 
@@ -29,7 +33,15 @@ public class ByteBufUtil {
         short length = readShort(byteBuf);
         StringBuilder stringBuilder = new StringBuilder();
         for (short i = 0; i < length; i++) {
-            io.netty.util.internal.StringUtil.byteToHexStringPadded(stringBuilder, byteBuf.readUnsignedByte());
+            StringUtil.byteToHexStringPadded(stringBuilder, byteBuf.readUnsignedByte());
+        }
+        return stringBuilder.toString();
+    }
+
+    public String readStringAsHex(ByteBuf byteBuf, int length) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (short i = 0; i < length; i++) {
+            StringUtil.byteToHexStringPadded(stringBuilder, byteBuf.readUnsignedByte());
         }
         return stringBuilder.toString();
     }
@@ -61,7 +73,7 @@ public class ByteBufUtil {
     public String readOpcode(ByteBuf byteBuf) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < 2; i++) {
-            io.netty.util.internal.StringUtil.byteToHexStringPadded(stringBuilder, byteBuf.readUnsignedByte());
+            StringUtil.byteToHexStringPadded(stringBuilder, byteBuf.readUnsignedByte());
         }
         return stringBuilder.toString();
     }

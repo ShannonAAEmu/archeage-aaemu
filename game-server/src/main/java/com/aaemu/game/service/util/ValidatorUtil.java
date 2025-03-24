@@ -3,7 +3,7 @@ package com.aaemu.game.service.util;
 import com.aaemu.game.service.dto.packet.client.CSCreateCharacter;
 import com.aaemu.game.service.dto.packet.server.SCCharacterCreationFailed;
 import com.aaemu.game.service.enums.packet.CharacterCreationError;
-import com.aaemu.game.service.enums.unit.AbilityType;
+import com.aaemu.game.service.enums.unit.Ability;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -23,14 +23,14 @@ public class ValidatorUtil {
             packet.getChannel().writeAndFlush(characterCreationFailedPacket.build(byteBufUtil));
             return false;
         }
-        if (!AbilityType.NONE.equals(packet.getAbilityList().get(1)) && !AbilityType.NONE.equals(packet.getAbilityList().get(2))) {
-            // TODO Send error msg
-            return false;
-        }
-        if (1 != packet.getLevel()) {
-            // TODO Send error msg
-            return false;
-        }
+//        if (!Ability.NONE.equals(packet.getAbility_1())) {
+//            // TODO Send error msg
+//            return false;
+//        }
+//        if (1 != packet.getLevel()) {
+//            // TODO Send error msg
+//            return false;
+//        }
         return true;
     }
 

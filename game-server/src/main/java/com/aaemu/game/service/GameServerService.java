@@ -2,6 +2,7 @@ package com.aaemu.game.service;
 
 import com.aaemu.game.service.dto.packet.client.CSBroadcastVisualOption;
 import com.aaemu.game.service.dto.packet.client.CSCreateCharacter;
+import com.aaemu.game.service.dto.packet.client.CSDeleteCharacter;
 import com.aaemu.game.service.dto.packet.client.CSLeaveWorld;
 import com.aaemu.game.service.dto.packet.client.CSRefreshInCharacterList;
 import io.netty.channel.Channel;
@@ -20,4 +21,6 @@ public interface GameServerService {
     void leaveWorld(CSLeaveWorld packet);
 
     void createCharacter(CSCreateCharacter packet);
+
+    void deleteCharacter(CSDeleteCharacter packet);
 }

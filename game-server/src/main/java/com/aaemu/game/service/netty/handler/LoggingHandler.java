@@ -43,6 +43,7 @@ public class LoggingHandler extends io.netty.handler.logging.LoggingHandler {
         logIgnoreClientPackets.add(ClientPacket.CS_LIST_CHARACTER);
         logIgnoreClientPackets.add(ClientPacket.CS_BROADCAST_VISUAL_OPTION);
         logIgnoreClientPackets.add(ClientPacket.CS_REFRESH_IN_CHARACTER_LIST);
+        logIgnoreClientPackets.add(ClientPacket.CS_DELETE_CHARACTER);
     }
 
     private void initLogIgnoreServerPackets() {

@@ -12,7 +12,8 @@ public enum ClientPacket {
     CS_LIST_CHARACTER("0019", "1900"),
     CS_BROADCAST_VISUAL_OPTION("0101", "0101"),
     CS_REFRESH_IN_CHARACTER_LIST("001A", "1A00"),
-    CS_CREATE_CHARACTER("001B", "1B00");
+    CS_CREATE_CHARACTER("001B", "1B00"),
+    CS_DELETE_CHARACTER("001D", "1D00");
 
     private final String opcode;
     private final String rawOpcode;

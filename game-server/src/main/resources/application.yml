@@ -12,7 +12,9 @@ game_server:
   config:
     total_characters_limit: 4
     is_pre_select_character_period: false
-    welcome_msg: Welcome to AAEMU Java server
+    welcome_msg: Welcome to DEV server
     start:
       level: 1
-      money: 10000  # Copper
+      money: 1000000  # Copper
+      clothEquip: true
+      weaponEquip: true
