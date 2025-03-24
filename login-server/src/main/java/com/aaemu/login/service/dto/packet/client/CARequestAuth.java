@@ -6,6 +6,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import lombok.Data;
 
+/**
+ * @author Shannon
+ */
 @Data
 public class CARequestAuth implements ClientPacket {
     private final Channel channel;
@@ -16,7 +19,7 @@ public class CARequestAuth implements ClientPacket {
     private final String account;
     private final String mac;
     private final String mac2;
-    private final byte[] cpu;
+    private final String cpu;
 
     public CARequestAuth(Channel channel, ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.channel = channel;
@@ -25,12 +28,8 @@ public class CARequestAuth implements ClientPacket {
         this.svc = byteBufUtil.readByte(byteBuf);
         this.dev = byteBufUtil.readBoolean(byteBuf);
         this.account = byteBufUtil.readString(byteBuf);
-        this.mac = byteBufUtil.readString(byteBuf);
-        this.mac2 = byteBufUtil.readString(byteBuf);
-        this.cpu = new byte[8];
-        for (byte i = 0; i < this.cpu.length; i++) {
-            this.cpu[i] = byteBufUtil.readByte(byteBuf);
-        }
+        this.mac = byteBufUtil.readStringAsHex(byteBuf);
+        this.mac2 = byteBufUtil.readStringAsHex(byteBuf);
+        this.cpu = byteBufUtil.readStringAsHex(byteBuf, 8);
     }
-
 }

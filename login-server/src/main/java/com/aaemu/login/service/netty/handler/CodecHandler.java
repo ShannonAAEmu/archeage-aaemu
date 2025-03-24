@@ -2,7 +2,6 @@ package com.aaemu.login.service.netty.handler;
 
 import com.aaemu.login.service.dto.packet.client.CACancelEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse;
-import com.aaemu.login.service.dto.packet.client.CAChallengeResponse2;
 import com.aaemu.login.service.dto.packet.client.CAEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAListWorld;
 import com.aaemu.login.service.dto.packet.client.CAOtpNumber;
@@ -65,7 +64,6 @@ public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
             case CA_REQUEST_AUTH -> out.add(new CARequestAuth(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
             case CA_REQUEST_AUTH_TENCENT -> out.add(new CARequestAuthTencent(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
             case CA_CHALLENGE_RESPONSE -> out.add(new CAChallengeResponse(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
-            case CA_CHALLENGE_RESPONSE_2 -> out.add(new CAChallengeResponse2(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
             case CA_OTP_NUMBER -> out.add(new CAOtpNumber(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
             case CA_TEST_ARS -> out.add(new CATestArs(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
             case CA_PC_CERT_NUMBER -> out.add(new CAPcCertNumber(ChannelUtil.getChannel(ctx), byteBufUtil, msg));

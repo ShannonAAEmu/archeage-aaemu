@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ServerPacket {
-    WZ_Join_Response("0000", "0000");
+    WZ_Join_Response("0000", "0000"),
+    WZ_RUN_COMMAND("0001", "0100"), // Not used in emu
+    WZ_SPAWNER_LIST("0005", "0500");
 
     private final String opcode;
     private final String rawOpcode;

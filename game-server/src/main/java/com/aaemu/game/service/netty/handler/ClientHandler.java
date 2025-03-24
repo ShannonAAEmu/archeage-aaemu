@@ -6,6 +6,7 @@ import com.aaemu.game.service.PingPongService;
 import com.aaemu.game.service.dto.packet.ClientPacket;
 import com.aaemu.game.service.dto.packet.client.CSBroadcastVisualOption;
 import com.aaemu.game.service.dto.packet.client.CSCreateCharacter;
+import com.aaemu.game.service.dto.packet.client.CSDeleteCharacter;
 import com.aaemu.game.service.dto.packet.client.CSLeaveWorld;
 import com.aaemu.game.service.dto.packet.client.CSListCharacter;
 import com.aaemu.game.service.dto.packet.client.CSRefreshInCharacterList;
@@ -65,6 +66,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ClientPacket> {
             case CSRefreshInCharacterList packet -> gameServerService.refreshInCharacterList(packet);
             case CSLeaveWorld packet -> gameServerService.leaveWorld(packet);
             case CSCreateCharacter packet -> gameServerService.createCharacter(packet);
+            case CSDeleteCharacter packet -> gameServerService.deleteCharacter(packet);
             default -> throw new PacketException("Unknown packet for processing: " + clientPacket);
         }
     }

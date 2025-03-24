@@ -77,7 +77,7 @@ public class ByteBufUtil {
         return stringBuilder.toString();
     }
 
-    public void writeByte(byte value, ByteBuf byteBuf) {
+    public void writeByte(int value, ByteBuf byteBuf) {
         byteBuf.writeByte(value);
     }
 
@@ -132,6 +132,12 @@ public class ByteBufUtil {
     public void writeOpcode(ProxyPacket packet, ByteBuf byteBuf) {
         for (int i = 0; i < packet.getRawOpcode().length(); i = i + 2) {
             byteBuf.writeByte(Integer.parseInt(packet.getRawOpcode().substring(i, i + 2), 16));
+        }
+    }
+
+    public void writeHex(String packet, ByteBuf byteBuf) {
+        for (int i = 0; i < packet.length(); i = i + 2) {
+            byteBuf.writeByte(Integer.parseInt(packet.substring(i, i + 2), 16));
         }
     }
 

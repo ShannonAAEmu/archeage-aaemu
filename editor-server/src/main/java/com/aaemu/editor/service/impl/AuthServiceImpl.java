@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void login(CELogin packet) {
-        log.info("Login to editor server from: {}", packet.getAccountName());
+        log.info("Login to editor server by: {}", packet.getAccountName());
         accountMap.put(packet.getChannel(), new Account(packet.getAccountName()));
         ECLoginResponse loginResponse = new ECLoginResponse();
         loginResponse.setReason(0);

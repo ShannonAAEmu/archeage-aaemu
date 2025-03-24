@@ -2,8 +2,10 @@ package com.aaemu.zone.service.impl;
 
 import com.aaemu.zone.service.JoinService;
 import com.aaemu.zone.service.dto.packet.client.ZWJoinPacket;
-import com.aaemu.zone.service.dto.packet.server.WZJoinResponsePacket;
+import com.aaemu.zone.service.dto.packet.server.WZJoinResponse;
+import com.aaemu.zone.service.dto.packet.server.WZSpawnerList;
 import com.aaemu.zone.service.model.Account;
+import com.aaemu.zone.service.model.FutureSet;
 import com.aaemu.zone.service.util.ByteBufUtil;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +25,14 @@ public class JoinServiceImpl implements JoinService {
     @Override
     public void join(ZWJoinPacket packet) {
         accountMap.put(packet.getChannel(), new Account(packet.getAccountId()));
-        WZJoinResponsePacket WZJoinResponsePacket = new WZJoinResponsePacket();
-        WZJoinResponsePacket.setReason(0);
-        WZJoinResponsePacket.setFSet("0"); // siege
-        WZJoinResponsePacket.setBf(false);
-        packet.getChannel().writeAndFlush(WZJoinResponsePacket.build(byteBufUtil));
+        WZJoinResponse joinResponse = new WZJoinResponse();
+        joinResponse.setReason(0);
+        joinResponse.setFutureSet(new FutureSet());
+        joinResponse.setBf(false);
+        packet.getChannel().writeAndFlush(joinResponse.build(byteBufUtil));
+        WZSpawnerList spawnerList = new WZSpawnerList();
+        spawnerList.setLast(true);
+        spawnerList.setCount((byte) 0);
+        packet.getChannel().writeAndFlush(spawnerList.build(byteBufUtil));
     }
 }

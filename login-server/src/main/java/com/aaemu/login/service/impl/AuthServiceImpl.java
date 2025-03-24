@@ -12,23 +12,24 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * @author Shannon
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class AuthServiceImpl implements AuthService {
     private static final String RECONNECT = "Request reconnect from account id: {}cookie: {}, world id: {}";
-    private static final String AUTH = "Request auth from account: {}, dev: {}";
     private final ChallengeService challengeService;
     private final Map<Channel, Account> accountMap;
 
     @Override
     public void auth(CARequestAuth packet) {
-        log.info(AUTH, packet.getAccount(), packet.isDev());
         Account account = new Account(packet.getChannel());
         account.setName(packet.getAccount());
         account.setDev(packet.isDev());
         accountMap.put(packet.getChannel(), account);
-        challengeService.sendChallenge(packet.getChannel());
+        challengeService.send(packet.getChannel());
     }
 
     @Override
@@ -38,6 +39,6 @@ public class AuthServiceImpl implements AuthService {
         account.setId(packet.getAccountId());
         account.setCookie(packet.getCookie());
         accountMap.put(packet.getChannel(), account);
-        challengeService.sendChallenge(packet.getChannel());
+        challengeService.send(packet.getChannel());
     }
 }

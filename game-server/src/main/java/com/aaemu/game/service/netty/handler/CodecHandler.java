@@ -2,6 +2,7 @@ package com.aaemu.game.service.netty.handler;
 
 import com.aaemu.game.service.dto.packet.client.CSBroadcastVisualOption;
 import com.aaemu.game.service.dto.packet.client.CSCreateCharacter;
+import com.aaemu.game.service.dto.packet.client.CSDeleteCharacter;
 import com.aaemu.game.service.dto.packet.client.CSLeaveWorld;
 import com.aaemu.game.service.dto.packet.client.CSListCharacter;
 import com.aaemu.game.service.dto.packet.client.CSRefreshInCharacterList;
@@ -93,6 +94,7 @@ public class CodecHandler extends ByteToMessageCodec<ByteBuf> {
             case CS_BROADCAST_VISUAL_OPTION -> out.add(new CSBroadcastVisualOption(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
             case CS_REFRESH_IN_CHARACTER_LIST -> out.add(new CSRefreshInCharacterList(ChannelUtil.getChannel(ctx)));
             case CS_CREATE_CHARACTER -> out.add(new CSCreateCharacter(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
+            case CS_DELETE_CHARACTER -> out.add(new CSDeleteCharacter(ChannelUtil.getChannel(ctx), byteBufUtil, msg));
         }
         if (msg.readableBytes() != 0) {
             throw new RuntimeException(String.format("Not all bytes were read from the client packet: %s [opcode: %s, size: %d, address: %s]", clientPacket.name(), clientPacket.getOpcode(), msg.readableBytes(), ChannelUtil.getChannel(ctx)));

@@ -6,7 +6,6 @@ import com.aaemu.login.service.WorldService;
 import com.aaemu.login.service.dto.packet.ClientPacket;
 import com.aaemu.login.service.dto.packet.client.CACancelEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAChallengeResponse;
-import com.aaemu.login.service.dto.packet.client.CAChallengeResponse2;
 import com.aaemu.login.service.dto.packet.client.CAEnterWorld;
 import com.aaemu.login.service.dto.packet.client.CAListWorld;
 import com.aaemu.login.service.dto.packet.client.CAOtpNumber;
@@ -60,11 +59,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<ClientPacket> {
     protected void channelRead0(ChannelHandlerContext ctx, ClientPacket clientPacket) {
         switch (clientPacket) {
             case CARequestAuth packet -> authService.auth(packet);
-            case CAChallengeResponse packet -> challengeService.challenge(packet);
-            case CAChallengeResponse2 packet -> challengeService.challenge(packet);
-            case CAOtpNumber packet -> challengeService.processOneTimePassword(packet);
-            case CATestArs packet -> challengeService.testArs(packet);
-            case CAPcCertNumber packet -> challengeService.processPcCertificate(packet);
+            case CAChallengeResponse packet -> challengeService.receive(packet);
+            case CAOtpNumber packet -> challengeService.receive(packet);
+            case CATestArs packet -> challengeService.receive(packet);
+            case CAPcCertNumber packet -> challengeService.receive(packet);
             case CAListWorld packet -> worldService.sendWorldList(packet.getChannel());
             case CAEnterWorld packet -> worldService.enterToWorld(packet.getChannel(), packet.getWid());
             case CACancelEnterWorld packet -> worldService.cancelEnterWorld(packet);

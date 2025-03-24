@@ -1,8 +1,11 @@
 package com.aaemu.game.service.impl;
 
 import com.aaemu.game.service.GameServerService;
+import com.aaemu.game.service.ItemService;
+import com.aaemu.game.service.ZoneService;
 import com.aaemu.game.service.dto.packet.client.CSBroadcastVisualOption;
 import com.aaemu.game.service.dto.packet.client.CSCreateCharacter;
+import com.aaemu.game.service.dto.packet.client.CSDeleteCharacter;
 import com.aaemu.game.service.dto.packet.client.CSLeaveWorld;
 import com.aaemu.game.service.dto.packet.client.CSRefreshInCharacterList;
 import com.aaemu.game.service.dto.packet.server.BroadcastVisualOption;
@@ -36,6 +39,8 @@ public class GameServiceImpl implements GameServerService {
     private final Map<Channel, Account> accountMap;
     private final ValidatorUtil validatorUtil;
     private final ByteBufUtil byteBufUtil;
+    private final ZoneService zoneService;
+    private final ItemService itemService;
 
     @Value("${game_server.config.welcome_msg}")
     private String welcomeMsg;
@@ -45,6 +50,12 @@ public class GameServiceImpl implements GameServerService {
 
     @Value("${game_server.config.start.money}")
     private int startMoney;
+
+    @Value("${game_server.config.start.clothEquip}")
+    private boolean addStartupClothEquip;
+
+    @Value("${game_server.config.start.weaponEquip}")
+    private boolean addStartupWeaponEquip;
 
     @Override
     public void broadcastVisualOption(CSBroadcastVisualOption packet) {
@@ -86,9 +97,18 @@ public class GameServiceImpl implements GameServerService {
             return;
         }
         SCCreateCharacterResponse createCharacterResponse = new SCCreateCharacterResponse(packet, accountMap);
+        createCharacterResponse.setZoneService(zoneService);
+        createCharacterResponse.setItemService(itemService);
+        createCharacterResponse.setAddStartupClothEquip(addStartupClothEquip);
+        createCharacterResponse.setAddStartupWeaponEquip(addStartupWeaponEquip);
         createCharacterResponse.setStartLevel(startLevel);
         createCharacterResponse.setStartMoney(startMoney);
         packet.getChannel().writeAndFlush(createCharacterResponse.build(byteBufUtil));
+    }
+
+    @Override
+    public void deleteCharacter(CSDeleteCharacter packet) {
+        // TODO delete character
     }
 
     private void processAccountWelcomeMsg(Channel channel) {

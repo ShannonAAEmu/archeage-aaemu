@@ -47,8 +47,16 @@ public class ByteBufUtil {
         return stringBuilder.toString();
     }
 
+    public void writeByte(byte value, ByteBuf byteBuf) {
+        byteBuf.writeByte(value);
+    }
+
     public void writeShort(int value, ByteBuf byteBuf) {
         byteBuf.writeShortLE(value);
+    }
+
+    public void writeInt(int value, ByteBuf byteBuf) {
+        byteBuf.writeIntLE(value);
     }
 
     public void writeString(String value, ByteBuf byteBuf) {

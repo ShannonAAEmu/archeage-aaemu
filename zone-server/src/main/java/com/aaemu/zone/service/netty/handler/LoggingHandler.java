@@ -33,21 +33,12 @@ public class LoggingHandler extends io.netty.handler.logging.LoggingHandler {
     }
 
     private void initLogIgnoreClientPackets() {
-//        logIgnoreClientPackets.add(ClientPacket.X2_ENTER_WORLD);
-//        logIgnoreClientPackets.add(ClientPacket.CS_LIST_CHARACTER);
-//        logIgnoreClientPackets.add(ClientPacket.CS_BROADCAST_VISUAL_OPTION);
-//        logIgnoreClientPackets.add(ClientPacket.CS_REFRESH_IN_CHARACTER_LIST);
-//        logIgnoreClientPackets.add(ClientPacket.CS_LEAVE_WORLD);
+        logIgnoreClientPackets.add(ClientPacket.ZW_Join);
     }
 
     private void initLogIgnoreServerPackets() {
-//        logIgnoreServerPackets.add(ServerPacket.X2_ENTER_WORLD_RESPONSE);
-//        logIgnoreServerPackets.add(ServerPacket.SC_INITIAL_CONFIG);
-//        logIgnoreServerPackets.add(ServerPacket.SC_ACCOUNT_INFO);
-//        logIgnoreServerPackets.add(ServerPacket.SC_CHAT_SPAM_DELAY);
-//        logIgnoreServerPackets.add(ServerPacket.SC_CHARACTER_LIST);
-//        logIgnoreServerPackets.add(ServerPacket.SC_REFRESH_IN_CHARACTER_LIST);
-//        logIgnoreServerPackets.add(ServerPacket.SC_ACCOUNT_WARNED);
+        logIgnoreServerPackets.add(ServerPacket.WZ_Join_Response);
+//        logIgnoreServerPackets.add(ServerPacket.WZ_SPAWNER_LIST);
     }
 
     @Override

@@ -14,7 +14,7 @@ login_server:
     active: true  # Print traffic
     use_ignore_list: true  # Not print some packets (More info: com.aaemu.login.service.netty.handler.LoggingHandler.java)
   auth:
-    # auto_registration: true
+#    auto_registration: true
     otp:
       active: false  # Use one time passwords (OTP)
       num: 1234

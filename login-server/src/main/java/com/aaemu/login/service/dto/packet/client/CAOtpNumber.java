@@ -6,18 +6,21 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import lombok.Data;
 
+/**
+ * @author Shannon
+ */
 @Data
 public class CAOtpNumber implements ClientPacket {
     private final Channel channel;
-    private final String num;
+    private final String number;    // num
 
     public CAOtpNumber(Channel channel, ByteBufUtil byteBufUtil, ByteBuf byteBuf) {
         this.channel = channel;
-        this.num = byteBufUtil.readString(byteBuf);
+        this.number = byteBufUtil.readString(byteBuf);
     }
 
-    public CAOtpNumber(Channel channel, String num) {
-        this.channel = channel;
-        this.num = num;
+    public CAOtpNumber(CATestArs packet) {
+        this.channel = packet.getChannel();
+        this.number = packet.getNum();
     }
 }
