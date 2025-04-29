@@ -1,5 +1,5 @@
 <div id="header" align="center">
-  <img src="https://i.imgur.com/NFDY376.png" width="300">
+  <img alt="AAEMU" src="https://i.imgur.com/NFDY376.png" width="300">
   <br>
   <div id="badges">
    <a href="Discord">
